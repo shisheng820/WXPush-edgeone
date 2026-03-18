@@ -1,273 +1,268 @@
-<!DOCTYPE html>
-<html lang="zh-CN" dir="ltr">
+<!doctype html>
+<html lang="zh-CN">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>消息推送</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title id="pageTitle">消息推送</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a1117;
+      --panel: #0f1a23;
+      --panel-2: #132230;
+      --line: #26475d;
+      --txt: #b7f2dd;
+      --muted: #7fbcaa;
+      --accent: #34f5c4;
+      --warn: #ffc266;
+      --danger: #ff6b8e;
+    }
 
-        body {
-            font-family: "Courier New", monospace;
-            background: #000;
-            color: #00ff00;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        .matrix-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: -1;
-        }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 16px;
+      font-family: "JetBrains Mono", "Noto Sans SC", monospace;
+      background:
+        linear-gradient(165deg, #05090d 0%, #0b131a 42%, #101f2a 100%);
+      color: var(--txt);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
 
-        .matrix-text {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            color: #00ff00;
-            font-family: "Courier New", monospace;
-            font-size: 0.8rem;
-            opacity: 0.6;
-        }
+    .scan {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02) 0px,
+          rgba(255, 255, 255, 0.02) 1px,
+          transparent 1px,
+          transparent 4px
+        );
+      mix-blend-mode: screen;
+      opacity: 0.26;
+      z-index: 0;
+    }
 
-        .terminal {
-            width: 90%;
-            max-width: 800px;
-            height: 500px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #00ff00;
-            border-radius: 8px;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
-        }
+    .grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(52, 245, 196, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(52, 245, 196, 0.06) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: radial-gradient(circle at center, black 22%, transparent 85%);
+      z-index: 0;
+    }
 
-        .terminal-header {
-            background: rgba(0, 20, 0, 0.8);
-            padding: 10px 15px;
-            border-bottom: 1px solid #00ff00;
-            display: flex;
-            align-items: center;
-        }
+    .terminal {
+      position: relative;
+      z-index: 1;
+      width: min(940px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      background: var(--panel);
+      box-shadow:
+        0 26px 70px rgba(0, 0, 0, 0.62),
+        0 0 0 1px rgba(52, 245, 196, 0.08),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+      animation: boot 620ms ease-out;
+    }
 
-        .terminal-buttons {
-            display: flex;
-            gap: 8px;
-        }
+    .bar {
+      height: 44px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #12212d, #101b26);
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 10px;
+    }
 
-        .terminal-button {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #ff5f57;
-            border: none;
-        }
+    .light {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      opacity: 0.9;
+    }
 
-        .terminal-button:nth-child(2) {
-            background: #ffbd2e;
-        }
+    .light:nth-child(1) {
+      background: var(--danger);
+    }
 
-        .terminal-button:nth-child(3) {
-            background: #28ca42;
-        }
+    .light:nth-child(2) {
+      background: var(--warn);
+    }
 
-        .terminal-title {
-            margin-left: 15px;
-            color: #00ff00;
-            font-size: 14px;
-            font-weight: bold;
-        }
+    .light:nth-child(3) {
+      background: var(--accent);
+    }
 
-        .terminal-body {
-            padding: 20px;
-            height: calc(100% - 50px);
-            overflow-y: auto;
-            font-size: 14px;
-            line-height: 1.4;
-        }
+    .bar-title {
+      margin-left: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
 
-        .terminal-line {
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-        }
+    .screen {
+      padding: clamp(16px, 3.2vw, 30px);
+      background:
+        radial-gradient(600px 220px at 85% -20%, rgba(52, 245, 196, 0.1), transparent 68%),
+        linear-gradient(180deg, var(--panel), var(--panel-2));
+    }
 
-        .terminal-prompt {
-            color: #00ff00;
-            margin-right: 10px;
-            font-weight: bold;
-        }
+    .line {
+      display: flex;
+      gap: 10px;
+      margin: 0 0 14px;
+      font-size: 13px;
+      color: var(--muted);
+      word-break: break-all;
+    }
 
-        .terminal-output {
-            color: #00aa00;
-            margin: 5px 0;
-        }
+    .prompt {
+      color: var(--accent);
+      flex: none;
+    }
 
-        .terminal-error {
-            color: #ff4444;
-            margin: 5px 0;
-        }
+    h1 {
+      margin: 10px 0 18px;
+      font-size: clamp(24px, 4.5vw, 42px);
+      line-height: 1.2;
+      color: #d5fff1;
+      letter-spacing: 0.02em;
+      text-wrap: balance;
+    }
 
-        .terminal-success {
-            color: #44ff44;
-            margin: 5px 0;
-        }
+    .payload {
+      border: 1px solid rgba(52, 245, 196, 0.28);
+      border-radius: 14px;
+      background: rgba(5, 12, 18, 0.66);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
 
-        /* 适配中间的通知内容 */
-        .info-card {
-            background: rgba(0, 30, 30, 0.85);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-left: 4px solid #00ff00;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
+    .payload .head {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
 
-        .info-card:hover {
-            transform: translateX(5px);
-            background: rgba(0, 128, 0, 0.9);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
+    .payload pre {
+      margin: 0;
+      font-family: inherit;
+      font-size: clamp(14px, 2.15vw, 18px);
+      line-height: 1.8;
+      color: var(--txt);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
 
-        .info-label {
-            font-size: 1.3rem;
-            color: #80deea;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
 
-        .info-label::before {
-            content: '';
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #00bcd4;
-            margin-right: 10px;
-        }
+    .chip {
+      border: 1px solid rgba(127, 188, 170, 0.32);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      background: rgba(8, 15, 20, 0.7);
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
-        .info-content {
-            font-size: 1.2rem;
-            color: #e0f7fa;
-            font-weight: 500;
-            word-break: break-word;
-            line-height: 1.6;
-            white-space: pre-line;
-        }
+    @keyframes boot {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.995);
+      }
 
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .terminal {
-                width: 100%;
-                max-width: 100%;
-                height: auto;
-            }
-        }
-    </style>
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 10px;
+      }
+
+      .chip {
+        white-space: normal;
+      }
+
+      .line {
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="particles" id="particles"></div>
+  <div class="grid" aria-hidden="true"></div>
+  <div class="scan" aria-hidden="true"></div>
 
-    <div class="matrix-bg"></div>
-    <div class="matrix-text">WeiXin</div>
-
-    <div class="terminal">
-        <div class="terminal-header">
-            <div class="terminal-buttons">
-                <div class="terminal-button"></div>
-                <div class="terminal-button"></div>
-                <div class="terminal-button"></div>
-            </div>
-            <div class="terminal-title">消息推送</div>
-        </div>
-        <div class="terminal-body">
-            <div class="info-card">
-                <div class="info-label">通知内容</div>
-                <div class="info-content" id="message">无告警信息</div>
-            </div>
-            <div class="info-card">
-                <div class="info-label">时间</div>
-                <div class="info-content" id="date">无时间信息</div>
-            </div>
-        </div>
+  <main class="terminal" role="main" aria-live="polite">
+    <div class="bar">
+      <span class="light"></span>
+      <span class="light"></span>
+      <span class="light"></span>
+      <span class="bar-title">wxpush://console</span>
     </div>
 
-    <script>
-        function getUrlParams() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return {
-                title: urlParams.get('title') || '消息推送',
-                message: urlParams.get('message') || '无告警信息',
-                date: urlParams.get('date') || '无时间信息'
-            };
-        }
+    <section class="screen">
+      <p class="line"><span class="prompt">$</span><span>init push job --channel wechat --priority high</span></p>
+      <h1 id="title">消息推送</h1>
 
-        function fillContent() {
-            const params = getUrlParams();
-            const titleEl = document.querySelector('.terminal-title');
-            const messageEl = document.getElementById('message');
-            const dateEl = document.getElementById('date');
+      <article class="payload">
+        <div class="head">Payload.message</div>
+        <pre id="message">无告警信息</pre>
+      </article>
 
-            if (titleEl) titleEl.textContent = params.title;
-            if (messageEl) messageEl.textContent = params.message;
-            if (dateEl) dateEl.textContent = params.date;
-        }
+      <div class="meta">
+        <span class="chip">status: delivered</span>
+        <span class="chip" id="date">timestamp: 无时间信息</span>
+      </div>
+    </section>
+  </main>
 
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            if (!particlesContainer) return;
+  <script>
+    const query = new URLSearchParams(window.location.search);
+    const title = query.get('title') || '消息推送';
+    const message = query.get('message') || '无告警信息';
+    const date = query.get('date') || '无时间信息';
 
-            const particleCount = 25;
-            const colors = [
-                'rgba(0, 188, 212, 0.2)',
-                'rgba(0, 150, 136, 0.2)',
-                'rgba(77, 182, 172, 0.15)'
-            ];
-
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-
-                const size = Math.random() * 3 + 1;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.background = randomColor;
-
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-
-                particle.style.animationDelay = `${Math.random() * 20}s`;
-                particle.style.animationDuration = `${20 + Math.random() * 15}s`;
-
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            fillContent();
-            createParticles();
-        });
-    </script>
+    document.getElementById('pageTitle').textContent = title;
+    document.getElementById('title').textContent = title;
+    document.getElementById('message').textContent = message;
+    document.getElementById('date').textContent = `timestamp: ${date}`;
+  </script>
 </body>
 
 </html>
