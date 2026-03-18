@@ -1,0 +1,6 @@
+*** Begin Patch
+*** Update File: f:\code\WXPush\edgeone-wxpush\functions\[path].js
+@@
+-export async function onRequest(context) {
++export async function onRequest(context) {
+*** End Patch
