@@ -1,21 +1,3 @@
-const express = require('express');
-const { marked } = require('marked');
-const path = require('path');
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// 静态文件服务（如果需要额外文件，这里可以扩展）
-app.use(express.static(path.join(__dirname, 'public')));
-
-// 主路由：处理 GET 请求，生成 HTML
-app.get('/', (req, res) => {
-  const url = new URL(req.url, `http://${req.headers.host}`);
-  const title = url.searchParams.get('title') || '消息推送';
-  const message = url.searchParams.get('message') || '无告警信息';
-  const date = url.searchParams.get('date') || '无时间信息';
-
-  const html = `
 <!DOCTYPE html>
 <html lang="zh-CN" dir="ltr">
 <head>
@@ -185,9 +167,7 @@ app.get('/', (req, res) => {
         window.onload = function() {
             fillContent();
         };
-    </script>
-      <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
-      <script>
+    </script>`r`n<script>
           // 创建动态粒子背景
           function createParticles() {
               const particlesContainer = document.getElementById('particles');
@@ -226,13 +206,9 @@ app.get('/', (req, res) => {
           // 处理 Markdown 渲染
           function renderMarkdown() {
               const messageEl = document.getElementById('message');
-              if (messageEl && typeof marked !== 'undefined') {
-                  const markdownText = messageEl.textContent || messageEl.innerText;
-                  messageEl.innerHTML = marked.parse(markdownText);
-              }
-          }
+}
   
-          // 页面加载时调用 
+          // 页面加载时调用
           window.onload = function() {
               createParticles();
               renderMarkdown();
@@ -241,12 +217,3 @@ app.get('/', (req, res) => {
 </body>
 </html>
 
-  `;
-
-  res.send(html);
-});
-
-// 启动服务器
-app.listen(PORT, () => {
-  console.log(`服务器运行在 http://localhost:${PORT}`);
-});

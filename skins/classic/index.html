@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title id="pageTitle">消息推送</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Noto Sans SC", "Segoe UI", sans-serif;
+        background: linear-gradient(160deg, #f8fbff 0%, #ebf4ff 100%);
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      .card {
+        width: min(760px, 100%);
+        border-radius: 20px;
+        background: #fff;
+        border: 1px solid #dbe8ff;
+        box-shadow: 0 16px 40px rgba(43, 72, 136, 0.14);
+        overflow: hidden;
+      }
+      .header {
+        padding: 24px;
+        background: linear-gradient(120deg, #2f80ed, #56ccf2);
+        color: #fff;
+      }
+      .title {
+        margin: 0;
+        font-size: clamp(24px, 5vw, 34px);
+      }
+      .body {
+        padding: 24px;
+      }
+      .content {
+        margin: 0;
+        line-height: 1.8;
+        font-size: 17px;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .date {
+        margin-top: 20px;
+        color: #5b6b88;
+        font-size: 14px;
+      }
+      @media (max-width: 640px) {
+        .header, .body {
+          padding: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="header">
+        <h1 id="title" class="title">消息推送</h1>
+      </div>
+      <div class="body">
+        <p id="message" class="content">无告警信息</p>
+        <div class="date" id="date">无时间信息</div>
+      </div>
+    </div>
+    <script>
+      const p = new URLSearchParams(window.location.search);
+      const title = p.get('title') || '消息推送';
+      const message = p.get('message') || '无告警信息';
+      const date = p.get('date') || '无时间信息';
+      document.getElementById('pageTitle').textContent = title;
+      document.getElementById('title').textContent = title;
+      document.getElementById('message').textContent = message;
+      document.getElementById('date').textContent = date;
+    </script>
+  </body>
+</html>
