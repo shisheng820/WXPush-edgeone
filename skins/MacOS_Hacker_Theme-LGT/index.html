@@ -109,8 +109,48 @@
             font-weight: 500;
             word-break: break-word;
             line-height: 1.6;
-            white-space: pre-line;
         }
+
+        .info-content h1, .info-content h2, .info-content h3, .info-content h4, .info-content h5, .info-content h6 {
+            color: #00ff00;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
+        .info-content p { margin-bottom: 1em; }
+        .info-content ul, .info-content ol { margin-bottom: 1em; padding-left: 1.5em; }
+        .info-content li { margin-bottom: 0.5em; }
+        .info-content blockquote {
+            border-left: 4px solid #00bcd4;
+            padding-left: 1em;
+            margin: 1em 0;
+            color: #80deea;
+            font-style: italic;
+        }
+        .info-content code {
+            background: rgba(0, 255, 0, 0.1);
+            color: #00ff00;
+            padding: 2px 4px;
+            font-family: monospace;
+        }
+        .info-content pre {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1em;
+            border: 1px solid #00ff00;
+            overflow-x: auto;
+            margin-bottom: 1em;
+        }
+        .info-content a { color: #00bcd4; text-decoration: underline; }
+        .info-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1em;
+        }
+        .info-content th, .info-content td {
+            border: 1px solid #00ff00;
+            padding: 8px;
+            text-align: left;
+        }
+        .info-content th { background: rgba(0, 255, 0, 0.1); color: #00ff00; }
 
         /* 响应式设计 */
         @media (max-width: 768px) {
@@ -150,31 +190,34 @@
 
       <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
       <script>
-          function getUrlParams() {
-              const urlParams = new URLSearchParams(window.location.search);
-              return {
-                  title: urlParams.get('title') || '消息推送',
-                  message: urlParams.get('message') || '无告警信息',
-                  date: urlParams.get('date') || '无时间信息'
-              };
+          const query = new URLSearchParams(window.location.search);
+          const title = query.get('title') || '消息推送';
+          const message = query.get('message') || '无告警信息';
+          const date = query.get('date') || '无时间信息';
+
+          function renderMarkdown(value) {
+              if (typeof marked !== 'undefined') {
+                  return marked.parse(value, { breaks: true });
+              }
+              return value;
           }
 
           function fillContent() {
-              const params = getUrlParams();
               const pageTitleEl = document.getElementById('pageTitle');
               const titleEl = document.getElementById('title');
               const messageEl = document.getElementById('message');
               const dateEl = document.getElementById('date');
 
-              if (pageTitleEl) pageTitleEl.textContent = params.title;
-              if (titleEl) titleEl.textContent = params.title;
-              if (messageEl) messageEl.textContent = params.message;
-              if (dateEl) dateEl.textContent = params.date;
+              if (pageTitleEl) pageTitleEl.textContent = title;
+              if (titleEl) titleEl.textContent = title;
+              if (messageEl) messageEl.innerHTML = renderMarkdown(message);
+              if (dateEl) dateEl.textContent = date;
           }
 
           // 创建动态粒子背景
           function createParticles() {
               const particlesContainer = document.getElementById('particles');
+              if (!particlesContainer) return;
               const particleCount = 25;
               const colors = [
                   'rgba(0, 188, 212, 0.2)',
@@ -207,20 +250,10 @@
               }
           }
   
-          // 处理 Markdown 渲染
-          function renderMarkdown() {
-              const messageEl = document.getElementById('message');
-              if (messageEl && typeof marked !== 'undefined') {
-                  const markdownText = messageEl.textContent || messageEl.innerText;
-                  messageEl.innerHTML = marked.parse(markdownText);
-              }
-          }
-  
           // 页面加载时调用
           window.onload = function() {
               fillContent();
               createParticles();
-              renderMarkdown();
           };
       </script>
 </body>

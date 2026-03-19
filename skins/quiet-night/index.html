@@ -132,7 +132,6 @@
             font-weight: 500;
             word-break: break-word;
             line-height: 1.6;
-            white-space: pre-line;
         }
        
         .pulse {
@@ -319,19 +318,22 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
     <script>
-        // 从 URL 参数读取数据
-        function getUrlParams() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return {
-                title: urlParams.get('title') || '消息推送',
-                message: urlParams.get('message') || '无告警信息',
-                date: urlParams.get('date') || '无时间信息'
-            };
+        const query = new URLSearchParams(window.location.search);
+        const title = query.get('title') || '消息推送';
+        const message = query.get('message') || '无告警信息';
+        const date = query.get('date') || '无时间信息';
+
+        function renderMarkdown(value) {
+            if (typeof marked !== 'undefined') {
+                return marked.parse(value, { breaks: true });
+            }
+            return value;
         }
 
         // 创建动态粒子背景
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
+            if (!particlesContainer) return;
             const particleCount = 25;
             const colors = [
                 'rgba(0, 188, 212, 0.2)',
@@ -360,22 +362,15 @@
             }
         }
 
-        // 处理 Markdown 渲染
-        function renderMarkdown() {
-            const messageEl = document.getElementById('message');
-            if (messageEl && typeof marked !== 'undefined') {
-                const markdownText = messageEl.textContent || messageEl.innerText;
-                messageEl.innerHTML = marked.parse(markdownText);
-            }
-        }
-
         // 填充页面内容
         function fillContent() {
-            const params = getUrlParams();
-            document.getElementById('title').textContent = params.title;
-            document.getElementById('message').textContent = params.message;
-            document.getElementById('date').textContent = params.date;
-            renderMarkdown(); // 渲染 Markdown
+            const titleEl = document.getElementById('title');
+            const messageEl = document.getElementById('message');
+            const dateEl = document.getElementById('date');
+
+            if (titleEl) titleEl.textContent = title;
+            if (messageEl) messageEl.innerHTML = renderMarkdown(message);
+            if (dateEl) dateEl.textContent = date;
         }
 
         // 页面加载时调用

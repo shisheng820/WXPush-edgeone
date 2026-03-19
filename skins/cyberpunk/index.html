@@ -175,11 +175,55 @@
     .message {
       margin: 0;
       font-size: clamp(15px, 2.2vw, 19px);
-      line-height: 1.8;
+      line-height: 1.6;
       color: var(--text);
-      white-space: pre-wrap;
       word-break: break-word;
     }
+
+    .message h1, .message h2, .message h3, .message h4, .message h5, .message h6 {
+      color: var(--neon-blue);
+      margin-top: 1em;
+      margin-bottom: 0.5em;
+      text-transform: uppercase;
+    }
+    .message p { margin-bottom: 1em; }
+    .message ul, .message ol { margin-bottom: 1em; padding-left: 1.5em; }
+    .message li { margin-bottom: 0.5em; }
+    .message blockquote {
+      border-left: 3px solid var(--neon-pink);
+      padding-left: 1em;
+      margin: 1em 0;
+      color: var(--muted);
+      font-style: italic;
+      background: rgba(255, 45, 106, 0.05);
+    }
+    .message code {
+      background: rgba(0, 212, 255, 0.1);
+      color: var(--neon-blue);
+      padding: 2px 4px;
+      font-family: monospace;
+    }
+    .message pre {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 1em;
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      margin-bottom: 1em;
+    }
+    .message a { color: var(--neon-pink); text-decoration: none; border-bottom: 1px dashed var(--neon-pink); }
+    .message a:hover { color: var(--neon-blue); border-bottom-color: var(--neon-blue); }
+    .message table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1em;
+      font-size: 0.9em;
+    }
+    .message th, .message td {
+      border: 1px solid var(--border);
+      padding: 8px;
+      text-align: left;
+    }
+    .message th { background: rgba(0, 212, 255, 0.05); color: var(--neon-blue); }
 
     .meta-bar {
       display: flex;
@@ -281,35 +325,18 @@
     </section>
   </main>
 
-    <script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
+  <script>
     const query = new URLSearchParams(window.location.search);
     const title = query.get('title') || '消息推送';
     const message = query.get('message') || '无告警信息';
     const date = query.get('date') || '无时间信息';
 
-    function escapeHtml(value) {
-      return value
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
     function renderMarkdown(value) {
-      const normalized = value.replace(/\r\n/g, '\n');
-      const escaped = escapeHtml(normalized);
-
-      return escaped
-        .replace(/^#{1,6}\s+(.*)$/gm, '<strong>$1</strong>')
-        .replace(/^\s*[-*+]\s+(.*)$/gm, '• $1')
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/__(.+?)__/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/_(.+?)_/g, '<em>$1</em>')
-        .replace(/`([^`]+)`/g, '<code>$1</code>')
-        .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
-        .replace(/\n/g, '<br>');
+      if (typeof marked !== 'undefined') {
+        return marked.parse(value, { breaks: true });
+      }
+      return value;
     }
 
     const pageTitleEl = document.getElementById('pageTitle');

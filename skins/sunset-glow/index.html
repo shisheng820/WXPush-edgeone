@@ -206,10 +206,60 @@
       margin-bottom: 20px;
       border: 1px solid var(--border);
       font-size: clamp(15px, 2vw, 17px);
-      line-height: 1.8;
-      white-space: pre-wrap;
+      line-height: 1.6;
       word-break: break-word;
     }
+
+    .message h1, .message h2, .message h3, .message h4, .message h5, .message h6 {
+      margin-top: 1.2em;
+      margin-bottom: 0.6em;
+      color: var(--text);
+      line-height: 1.25;
+    }
+    .message p { margin-bottom: 1em; }
+    .message p:last-child { margin-bottom: 0; }
+    .message ul, .message ol { padding-left: 1.5em; margin-bottom: 1em; }
+    .message li { margin-bottom: 0.5em; }
+    .message blockquote {
+      padding: 0 1em;
+      color: var(--muted);
+      border-left: 0.25em solid var(--accent);
+      background: rgba(255, 107, 53, 0.05);
+      margin-bottom: 1em;
+      border-radius: 4px;
+    }
+    .message code {
+      padding: 0.2em 0.4em;
+      font-size: 85%;
+      background-color: var(--accent-soft);
+      color: var(--text);
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    .message pre {
+      padding: 16px;
+      overflow: auto;
+      font-size: 85%;
+      line-height: 1.45;
+      background-color: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 1em;
+    }
+    .message pre code { background: none; padding: 0; }
+    .message table {
+      border-spacing: 0;
+      border-collapse: collapse;
+      margin-bottom: 1em;
+      width: 100%;
+    }
+    .message table th, .message table td {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+    }
+    .message table th { background-color: var(--accent-soft); }
+    .message a { color: var(--accent); text-decoration: none; }
+    .message a:hover { text-decoration: underline; }
 
     .footer {
       display: flex;
@@ -293,35 +343,18 @@
     </div>
   </main>
 
-    <script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
+  <script>
     const query = new URLSearchParams(window.location.search);
     const title = query.get('title') || '消息推送';
     const message = query.get('message') || '无告警信息';
     const date = query.get('date') || '无时间信息';
 
-    function escapeHtml(value) {
-      return value
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
     function renderMarkdown(value) {
-      const normalized = value.replace(/\r\n/g, '\n');
-      const escaped = escapeHtml(normalized);
-
-      return escaped
-        .replace(/^#{1,6}\s+(.*)$/gm, '<strong>$1</strong>')
-        .replace(/^\s*[-*+]\s+(.*)$/gm, '• $1')
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/__(.+?)__/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/_(.+?)_/g, '<em>$1</em>')
-        .replace(/`([^`]+)`/g, '<code>$1</code>')
-        .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
-        .replace(/\n/g, '<br>');
+      if (typeof marked !== 'undefined') {
+        return marked.parse(value, { breaks: true });
+      }
+      return value;
     }
 
     const pageTitleEl = document.getElementById('pageTitle');
