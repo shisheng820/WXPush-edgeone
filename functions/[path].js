@@ -60,24 +60,64 @@ async function getParams(request) {
 }
 
 const SKINS = {
-  classic: {
-    name: '经典卡片',
-    slug: 'classic',
-    route: '/skins/classic/index.html',
+  'warm-magazine': {
+    name: '暖调杂志',
+    slug: 'warm-magazine',
+    route: '/skins/warm-magazine/index.html',
   },
-  night: {
+  cyberpunk: {
+    name: '赛博朋克',
+    slug: 'cyberpunk',
+    route: '/skins/cyberpunk/index.html',
+  },
+  sakura: {
+    name: '樱花',
+    slug: 'sakura',
+    route: '/skins/sakura/index.html',
+  },
+  'terminal-neon': {
+    name: '终端霓虹',
+    slug: 'terminal-neon',
+    route: '/skins/terminal-neon/index.html',
+  },
+  'ocean-breeze': {
+    name: '海洋微风',
+    slug: 'ocean-breeze',
+    route: '/skins/ocean-breeze/index.html',
+  },
+  'hacker-dark': {
+    name: '黑客暗黑',
+    slug: 'hacker-dark',
+    route: '/skins/hacker-dark/index.html',
+  },
+  'aurora-glass': {
+    name: '极光玻璃',
+    slug: 'aurora-glass',
+    route: '/skins/aurora-glass/index.html',
+  },
+  'minimalist-light': {
+    name: '极简浅色',
+    slug: 'minimalist-light',
+    route: '/skins/minimalist-light/index.html',
+  },
+  'quiet-night': {
     name: '静谧的夜空',
-    slug: 'night',
-    route: '/skins/night/index.html',
+    slug: 'quiet-night',
+    route: '/skins/quiet-night/index.html',
   },
-  hacker: {
-    name: 'MacOS Hacker',
-    slug: 'hacker',
-    route: '/skins/hacker/index.html',
+  'sunset-glow': {
+    name: '落日余晖',
+    slug: 'sunset-glow',
+    route: '/skins/sunset-glow/index.html',
+  },
+  'macos-hacker': {
+    name: 'macOS 极客',
+    slug: 'macos-hacker',
+    route: '/skins/MacOS_Hacker_Theme-LGT/index.html',
   },
 };
 
-const DEFAULT_SKIN_KEY = 'classic';
+const DEFAULT_SKIN_KEY = 'warm-magazine';
 
 function getSkinByKey(skinKey) {
   const key = (skinKey || '').toString().trim().toLowerCase();
@@ -168,37 +208,29 @@ export async function onRequest(context) {
         min-height: 100vh;
         margin: 0;
         padding: 24px;
-        background: linear-gradient(170deg, #f3e8ff 0%, #ffffff 100%);
-        color: #1f2937;
+        background: #fdf6f0;
+        color: #4a3f35;
         box-sizing: border-box;
       }
       .container {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(10px);
-        border-radius: 24px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(139, 92, 71, 0.1);
+        border: 1px solid #eee1d5;
         padding: 40px;
         max-width: 720px;
         width: 100%;
         text-align: left;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-      .container:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
       }
       h1 {
         margin: 0 0 12px;
         font-size: 32px;
         font-weight: 700;
         text-align: center;
-        background: linear-gradient(90deg, #8b5cf6, #3b82f6);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: #8b5c47;
       }
       .hint {
-        color: #4b5563;
+        color: #7c6d60;
         margin: 0 0 24px;
         font-size: 16px;
         line-height: 1.6;
@@ -208,69 +240,69 @@ export async function onRequest(context) {
         display: block;
         margin: 16px 0 8px;
         font-weight: 700;
-        color: #374151;
+        color: #5d4d42;
       }
       input[type=text], textarea, select {
         width: 100%;
         padding: 12px;
-        border: 1px solid #d4d4d8;
-        border-radius: 12px;
-        background: #f4f4f5;
+        border: 1px solid #ddd1c5;
+        border-radius: 8px;
+        background: #fcfaf8;
         transition: all 0.2s ease;
         box-sizing: border-box;
         font-family: inherit;
         font-size: 14px;
+        color: #4a3f35;
       }
       input[type=text]:focus, textarea:focus, select:focus {
         outline: none;
-        border-color: #8b5cf6;
+        border-color: #8b5c47;
         background: #ffffff;
-        box-shadow: 0 0 0 2px #c4b5fd;
+        box-shadow: 0 0 0 2px rgba(139, 92, 71, 0.15);
       }
       button {
         margin-top: 24px;
-        padding: 12px 20px;
-        border-radius: 12px;
+        padding: 12px 24px;
+        border-radius: 8px;
         border: 0;
-        background: #8b5cf6;
+        background: #8b5c47;
         color: #fff;
         cursor: pointer;
         font-weight: 700;
         transition: all 0.2s ease;
       }
       button:hover {
-        background: #7c3aed;
-        transform: translateY(-2px);
+        background: #734b39;
+        transform: translateY(-1px);
       }
       button#clearBtn {
-         background: #f4f4f5;
-         color: #374151;
-         border: 1px solid #e4e4e7;
+         background: #f8f1eb;
+         color: #8b5c47;
+         border: 1px solid #eee1d5;
       }
        button#clearBtn:hover {
-         background: #ffffff;
-         border-color: #d4d4d8;
-         color: #1f2937;
+         background: #fdf6f0;
+         border-color: #8b5c47;
       }
       pre {
-        background: #1f2937;
-        color: #e5e7eb;
+        background: #2d2620;
+        color: #f8f1eb;
         padding: 16px;
-        border-radius: 12px;
+        border-radius: 8px;
         white-space: pre-wrap;
         word-break: break-all;
       }
       .skin-preview {
         margin-top: 8px;
         font-size: 13px;
-        color: #6b7280;
+        color: #8c7e73;
       }
     </style>
   </head>
   <body>
     <div class="container">
       <h1>WXPush 测试页面</h1>
-      <p class="hint">当前 token (来自路径)：<strong>${sanitizedToken}</strong></p>
+      <p class="hint">当前 token：<strong>${sanitizedToken}</strong></p>
 
       <form id="testForm" method="POST" action="/wxsend">
 
@@ -294,9 +326,17 @@ export async function onRequest(context) {
 
         <label for="skin">内置皮肤 (skin，可选)</label>
         <select id="skin" name="skin">
-          <option value="classic">经典卡片</option>
-          <option value="night">静谧的夜空</option>
-          <option value="hacker">MacOS Hacker</option>
+          <option value="warm-magazine">暖调杂志</option>
+          <option value="cyberpunk">赛博朋克</option>
+          <option value="sakura">樱花</option>
+          <option value="terminal-neon">终端霓虹</option>
+          <option value="ocean-breeze">海洋微风</option>
+          <option value="hacker-dark">黑客暗黑</option>
+          <option value="aurora-glass">极光玻璃</option>
+          <option value="minimalist-light">极简浅色</option>
+          <option value="quiet-night">静谧的夜空</option>
+          <option value="sunset-glow">落日余晖</option>
+          <option value="macos-hacker">macOS 极客</option>
         </select>
         <div id="skinPreview" class="skin-preview"></div>
 
@@ -326,9 +366,17 @@ export async function onRequest(context) {
       const skinPreview = document.getElementById('skinPreview');
 
       const skinRouteMap = {
-        classic: '/skins/classic/index.html',
-        night: '/skins/night/index.html',
-        hacker: '/skins/hacker/index.html'
+        'warm-magazine': '/skins/warm-magazine/index.html',
+        cyberpunk: '/skins/cyberpunk/index.html',
+        sakura: '/skins/sakura/index.html',
+        'terminal-neon': '/skins/terminal-neon/index.html',
+        'ocean-breeze': '/skins/ocean-breeze/index.html',
+        'hacker-dark': '/skins/hacker-dark/index.html',
+        'aurora-glass': '/skins/aurora-glass/index.html',
+        'minimalist-light': '/skins/minimalist-light/index.html',
+        'quiet-night': '/skins/quiet-night/index.html',
+        'sunset-glow': '/skins/sunset-glow/index.html',
+        'macos-hacker': '/skins/MacOS_Hacker_Theme-LGT/index.html'
       };
 
       function withAccessQuery(rawUrl) {
@@ -353,8 +401,8 @@ export async function onRequest(context) {
 
       function updateSkinPreview() {
         if (!skinSelect || !skinPreview) return;
-        const selected = skinSelect.value || 'classic';
-        const route = skinRouteMap[selected] || '/skins/classic/index.html';
+        const selected = skinSelect.value || 'warm-magazine';
+        const route = skinRouteMap[selected] || '/skins/warm-magazine/index.html';
         skinPreview.textContent = '皮肤链接: ' + withAccessQuery(window.location.origin + route);
       }
 
@@ -371,7 +419,7 @@ export async function onRequest(context) {
           document.getElementById('appid').value = '';
           document.getElementById('secret').value = '';
           document.getElementById('template_id').value = '';
-          document.getElementById('skin').value = 'classic';
+          document.getElementById('skin').value = 'warm-magazine';
           document.getElementById('base_url').value = '';
           updateSkinPreview();
           responseArea.textContent = '';
@@ -394,8 +442,8 @@ export async function onRequest(context) {
           }
 
           if (!payload.base_url) {
-            const selected = (payload.skin || 'classic').toLowerCase();
-            const route = skinRouteMap[selected] || '/skins/classic/index.html';
+            const selected = (payload.skin || 'warm-magazine').toLowerCase();
+            const route = skinRouteMap[selected] || '/skins/warm-magazine/index.html';
             payload.base_url = withAccessQuery(window.location.origin + route);
           }
 
@@ -406,7 +454,7 @@ export async function onRequest(context) {
 
             const response = await fetch('/wxsend', { method: 'POST', headers, body: JSON.stringify(payload) });
             const responseText = await response.text();
-            responseArea.textContent = 'Status: ' + response.status + '\\n\\n' + responseText;
+            responseArea.textContent = 'Status: ' + response.status + '\n\n' + responseText;
             responseCard.style.display = 'block';
           } catch (err) {
             responseArea.textContent = 'Fetch error: ' + err.message;
@@ -544,43 +592,39 @@ export async function onRequest(context) {
         justify-content: center;
         min-height: 100vh;
         margin: 0;
-        background: linear-gradient(170deg, #f3e8ff 0%, #ffffff 100%);
-        color: #1f2937;
+        background: #fdf6f0;
+        color: #4a3f35;
       }
       .card {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(10px);
+        background: #fff;
         border-radius: 24px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        padding: 40px;
-        max-width: 720px;
+        box-shadow: 0 15px 45px rgba(139, 92, 71, 0.12);
+        border: 1px solid #eee1d5;
+        padding: 48px;
+        max-width: 800px;
         width: 90%;
         text-align: center;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-      .card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
       }
       h1 {
-        margin: 0 0 12px;
-        font-size: 32px;
+        margin: 0 0 16px;
+        font-size: 36px;
         font-weight: 700;
-        background: linear-gradient(90deg, #8b5cf6, #3b82f6);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: #8b5c47;
+        letter-spacing: -0.02em;
       }
       p {
-        color: #4b5563;
-        margin: 0 0 24px;
-        font-size: 16px;
-        line-height: 1.6;
+        color: #7c6d60;
+        margin: 0 0 32px;
+        font-size: 17px;
+        line-height: 1.8;
       }
       .author {
-        margin: 20px 0;
-        color: #374151;
-        font-size: 14px;
+        margin: 24px 0;
+        color: #5d4d42;
+        font-size: 15px;
+      }
+      .author strong {
+        color: #8b5c47;
       }
       .icons {
         display: flex;
@@ -592,74 +636,91 @@ export async function onRequest(context) {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 12px 20px;
+        padding: 14px 24px;
         border-radius: 12px;
         text-decoration: none;
-        color: #374151;
-        background: #f4f4f5;
-        border: 1px solid #e4e4e7;
+        color: #fff;
+        background: #8b5c47;
         font-weight: 700;
         transition: all 0.2s ease;
       }
       .btn:hover {
-        background: #ffffff;
-        border-color: #d4d4d8;
+        background: #734b39;
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      }
-      .icon {
-        width: 22px;
-        height: 22px;
-        display: inline-block;
+        box-shadow: 0 8px 20px rgba(139, 92, 71, 0.2);
       }
       footer {
-        margin-top: 24px;
-        color: #6b7280;
-        font-size: 12px;
+        margin-top: 32px;
+        color: #a39589;
+        font-size: 13px;
       }
       .skins {
-        margin-top: 20px;
+        margin-top: 24px;
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        text-align: left;
       }
       .skin {
-        display: block;
-        border: 1px solid #e4e4e7;
-        border-radius: 10px;
-        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border: 1px solid #eee1d5;
+        border-radius: 12px;
+        padding: 16px;
         text-decoration: none;
-        color: #374151;
-        font-size: 13px;
-        background: #fafafa;
+        color: #4a3f35;
+        background: #fcfaf8;
+        transition: all 0.2s ease;
       }
       .skin:hover {
-        border-color: #a78bfa;
+        border-color: #8b5c47;
         background: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(139, 92, 71, 0.08);
+      }
+      .skin-name {
+        font-weight: 700;
+        font-size: 15px;
+        margin-bottom: 4px;
+        color: #8b5c47;
+      }
+      .skin-desc {
+        font-size: 13px;
+        color: #8c7e73;
+      }
+      .preview-hint {
+        margin-top: 16px;
+        font-size: 14px;
+        color: #8c7e73;
+        font-style: italic;
       }
       .repo-link {
-        margin-top: 16px;
+        margin-top: 24px;
       }
       .repo-link a {
         display: inline-block;
-        padding: 10px 14px;
+        padding: 12px 20px;
         border-radius: 10px;
-        border: 1px solid #dbe4ff;
-        background: #f6f8ff;
-        color: #3155d6;
-        font-size: 13px;
+        border: 1px solid #eee1d5;
+        background: #fdf6f0;
+        color: #8b5c47;
+        font-size: 14px;
         font-weight: 700;
         text-decoration: none;
         transition: all 0.2s ease;
       }
       .repo-link a:hover {
-        background: #eef2ff;
-        border-color: #c7d2fe;
+        background: #fff;
+        border-color: #8b5c47;
         transform: translateY(-1px);
       }
       @media (max-width: 640px) {
         .skins {
           grid-template-columns: 1fr;
+        }
+        .card {
+          padding: 32px 24px;
         }
       }
     </style>
@@ -667,17 +728,58 @@ export async function onRequest(context) {
   <body>
     <div class="card">
       <h1>WXPush</h1>
-      <p>一个极简、可靠的微信消息推送服务，通过简单的 Webhook 请求，即可向微信用户发送模板消息。</p>
+      <p>一个极简、可靠的微信消息推送服务。<br>通过简单的 Webhook 请求，即可向微信用户发送精美的模板消息。</p>
       <div class="author">作者：<strong>诗笙</strong></div>
 
       <div class="skins">
-        <a class="skin" href="/skins/classic/index.html?title=%E6%9C%8D%E5%8A%A1%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6&message=%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E5%B7%B2%E6%81%A2%E5%A4%8D%EF%BC%8C%E5%BD%93%E5%89%8D%E5%BB%B6%E8%BF%9F%E5%9B%9E%E5%88%B0%E6%AD%A3%E5%B8%B8%E8%8C%83%E5%9B%B4%E3%80%82&date=2026-03-19%2010%3A30%3A00">经典卡片皮肤</a>
-        <a class="skin" href="/skins/night/index.html?title=%E6%B7%B1%E5%A4%9C%E5%91%8A%E8%AD%A6%E9%80%9A%E7%9F%A5&message=%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E7%B3%BB%E7%BB%9F%E5%8F%91%E7%8E%B0%E5%BC%82%E5%B8%B8%E5%B3%B0%E5%80%BC%EF%BC%8C%E5%B7%B2%E8%87%AA%E5%8A%A8%E8%A7%A6%E5%8F%91%E9%99%8D%E7%BA%A7%E7%AD%96%E7%95%A5%E3%80%82&date=2026-03-19%2002%3A18%3A45">静谧的夜空皮肤</a>
-        <a class="skin" href="/skins/hacker/index.html?title=SYSTEM%20ALERT&message=Node%20%5Bapi-gateway%5D%20latency%20spike%20detected.%20Auto-scaling%20policy%20applied.&date=2026-03-19%2014%3A02%3A19">MacOS Hacker 皮肤</a>
+        <a class="skin" href="/skins/warm-magazine/index.html?title=%E6%9A%96%E8%B0%83%E6%9D%82%E5%BF%97&message=%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E6%B8%A9%E9%A6%A8%E7%9A%84%E6%8E%A8%E9%80%81%EF%BC%8C%E5%B8%A6%E7%BB%99%E4%BD%A0%E6%91%A9%E7%99%BB%E4%B8%8E%E6%9F%94%E5%92%8C%E7%9A%84%E8%A7%86%E8%A7%89%E4%BD%93%E9%AA%8C%E3%80%82&date=2026-03-19%2010%3A30%3A00">
+          <span class="skin-name">暖调杂志 (默认)</span>
+          <span class="skin-desc">优雅的杂志排版风格</span>
+        </a>
+        <a class="skin" href="/skins/cyberpunk/index.html?title=CYBERPUNK%20ALERT&message=Neural%20link%20established.%20Data%20stream%20synced%20to%20the%20grid.&date=2026-03-19%2022%3A15%3A00">
+          <span class="skin-name">赛博朋克</span>
+          <span class="skin-desc">霓虹色彩与未来感</span>
+        </a>
+        <a class="skin" href="/skins/sakura/index.html?title=%E6%A8%B1%E8%8A%B1%E9%80%9A%E7%9F%A5&message=%E6%A8%B1%E8%8A%B1%E9%A3%98%E8%90%BD%E7%9A%84%E5%AD%A3%E8%8A%82%EF%BC%8C%E8%BF%99%E6%98%AF%E4%B8%80%E4%BB%BD%E6%B8%85%E6%96%B0%E7%9A%84%E9%97%AE%E5%80%99%E3%80%82&date=2026-03-19%2014%3A20%3A00">
+          <span class="skin-name">樱花</span>
+          <span class="skin-desc">唯美清新的粉色调</span>
+        </a>
+        <a class="skin" href="/skins/terminal-neon/index.html?title=TERMINAL%20LOG&message=Process%20terminated%20with%20exit%20code%200.%20All%20systems%20nominal.&date=2026-03-19%2009%3A45%3A12">
+          <span class="skin-name">终端霓虹</span>
+          <span class="skin-desc">极客范的命令行美学</span>
+        </a>
+        <a class="skin" href="/skins/ocean-breeze/index.html?title=%E6%B5%B7%E6%B4%8B%E5%BE%AE%E9%A3%8E&message=%E5%90%AC%EF%BC%8C%E9%82%A3%E6%98%AF%E6%B5%B7%E6%B5%AA%E6%8B%8D%E6%89%93%E6%B2%99%E6%BB%A9%E7%9A%84%E5%A3%B0%E9%9F%B3%E3%80%82&date=2026-03-19%2011%3A00%3A00">
+          <span class="skin-name">海洋微风</span>
+          <span class="skin-desc">清爽宁静的蓝色调</span>
+        </a>
+        <a class="skin" href="/skins/hacker-dark/index.html?title=ROOT%20ACCESS&message=Unauthorized%20access%20detected%20at%20node%2072.%20Countermeasures%20active.&date=2026-03-19%2003%3A12%3A59">
+          <span class="skin-name">黑客暗黑</span>
+          <span class="skin-desc">深邃冷静的专业感</span>
+        </a>
+        <a class="skin" href="/skins/aurora-glass/index.html?title=%E6%9E%81%E5%85%89%E7%8E%BB%E7%92%83&message=%E4%BC%98%E9%9B%85%E7%9A%84%E6%AF%9B%E7%8E%BB%E7%92%83%E8%B4%A8%E6%84%9F%EF%BC%8C%E9%85%8D%E5%90%88%E6%A2%A6%E5%B9%BB%E7%9A%84%E6%9E%81%E5%85%89%E6%B8%90%E5%8F%98%E3%80%82&date=2026-03-19%2020%3A00%3A00">
+          <span class="skin-name">极光玻璃</span>
+          <span class="skin-desc">梦幻渐变与毛玻璃</span>
+        </a>
+        <a class="skin" href="/skins/minimalist-light/index.html?title=%E6%9E%81%E7%AE%80%E6%B5%85%E8%89%B2&message=%E5%B0%91%E5%8D%B3%E6%98%AF%E5%A4%9A%EF%BC%8C%E4%B8%BA%E4%BD%A0%E5%B8%A6%E6%9D%A5%E6%9C%80%E7%BA%AF%E7%B2%B9%E7%9A%84%E9%98%85%E8%AF%BB%E4%BD%93%E9%AA%8C%E3%80%82&date=2026-03-19%2008%3A30%3A00">
+          <span class="skin-name">极简浅色</span>
+          <span class="skin-desc">纯净至简的视觉享受</span>
+        </a>
+        <a class="skin" href="/skins/quiet-night/index.html?title=%E9%9D%99%E8%B0%20%E5%A4%9C%E7%A9%BA&message=%E5%9C%A8%E5%AE%81%E9%9D%99%E7%9A%84%E5%A4%9C%E8%89%B2%E4%B8%AD%EF%BC%8C%E4%BD%93%E9%AA%8C%E5%A6%82%E6%9C%88%E5%85%89%E8%88%AC%E6%9F%94%E5%92%8C%E7%9A%84%E9%80%9A%E7%9F%A5%E3%80%82&date=2026-03-19%2023%3A50%3A00">
+          <span class="skin-name">静谧夜空</span>
+          <span class="skin-desc">深邃柔和的暗色调</span>
+        </a>
+        <a class="skin" href="/skins/sunset-glow/index.html?title=%E8%90%BD%E6%97%A5%E4%BD%99%E6%99%96&message=%E9%87%91%E8%89%B2%E7%9A%84%E4%BD%99%E6%99%96%E6%B4%92%E6%BB%A1%E5%A4%A9%E9%99%85%EF%BC%8C%E6%B8%A9%E6%9A%96%E8%80%8C%E5%85%85%E6%BB%A1%E5%B8%8C%E6%9C%9B%E3%80%82&date=2026-03-19%2018%3A15%3A00">
+          <span class="skin-name">落日余晖</span>
+          <span class="skin-desc">温暖明亮的霞光色彩</span>
+        </a>
+        <a class="skin" href="/skins/MacOS_Hacker_Theme-LGT/index.html?title=Terminal%20-%20bash&message=Last%20login%3A%20Thu%20Mar%2019%2010%3A21%3A35%20on%20ttys001%0AWelcome%20to%20macOS%20Hacker%20Theme.&date=2026-03-19%2010%3A22%3A00">
+          <span class="skin-name">macOS 极客</span>
+          <span class="skin-desc">经典 macOS 终端风格</span>
+        </a>
       </div>
-      <div class="preview-hint">点击皮肤卡片可查看带示例文案的预览效果。</div>
+      <div class="preview-hint">点击上方卡片预览不同风格的推送效果</div>
       <div class="repo-link">
-        <a href="https://github.com/shisheng820/WXPush-edgeone" target="_blank" rel="noopener noreferrer">开源项目：shisheng820/WXPush-edgeone</a>
+        <a href="https://github.com/shisheng820/WXPush-edgeone" target="_blank" rel="noopener noreferrer">查看 GitHub 仓库</a>
       </div>
       <footer>专注稳定、简洁、好用的微信通知体验。</footer>
     </div>
@@ -739,10 +841,3 @@ async function sendMessage(accessToken, userid, template_id, base_url, title, co
 
   return await response.json();
 }
-
-
-
-
-
-
-
