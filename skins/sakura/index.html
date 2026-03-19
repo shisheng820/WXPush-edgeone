@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title id="pageTitle">消息推送</title>
+  <style>
+    :root {
+      --bg: #fef6f8;
+      --card: rgba(255, 255, 255, 0.85);
+      --text: #4a3f44;
+      --muted: #8a7a80;
+      --accent: #e8869a;
+      --accent-soft: #f5d5dc;
+      --border: rgba(232, 134, 154, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(135deg, #fef6f8 0%, #fce4ec 50%, #fff5f7 100%);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      line-height: 1.7;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .petals {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .petal {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: radial-gradient(ellipse at 30% 30%, #ffc0cb, #ffb6c1);
+      border-radius: 50% 0 50% 50%;
+      opacity: 0.6;
+      animation: fall linear infinite;
+    }
+
+    .petal:nth-child(1) { left: 10%; animation-duration: 10s; animation-delay: 0s; }
+    .petal:nth-child(2) { left: 25%; animation-duration: 12s; animation-delay: 2s; width: 8px; height: 8px; }
+    .petal:nth-child(3) { left: 40%; animation-duration: 11s; animation-delay: 4s; }
+    .petal:nth-child(4) { left: 55%; animation-duration: 13s; animation-delay: 1s; width: 10px; height: 10px; }
+    .petal:nth-child(5) { left: 70%; animation-duration: 9s; animation-delay: 3s; }
+    .petal:nth-child(6) { left: 85%; animation-duration: 14s; animation-delay: 5s; width: 6px; height: 6px; }
+    .petal:nth-child(7) { left: 5%; animation-duration: 11s; animation-delay: 6s; width: 9px; height: 9px; }
+    .petal:nth-child(8) { left: 92%; animation-duration: 10s; animation-delay: 2s; }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-20px) rotate(0deg) scale(1);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.6;
+      }
+      90% {
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg) scale(0.5);
+        opacity: 0;
+      }
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      width: min(580px, 100%);
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      box-shadow:
+        0 8px 32px rgba(232, 134, 154, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      animation: bloom-in 0.6s ease-out;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .header {
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent), #f4a4b5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .icon::before {
+      content: "✿";
+      font-size: 16px;
+      color: white;
+    }
+
+    .label {
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    .body {
+      padding: 28px;
+      position: relative;
+    }
+
+    h1 {
+      font-size: clamp(26px, 4.5vw, 38px);
+      font-weight: 500;
+      line-height: 1.35;
+      margin-bottom: 22px;
+      color: var(--text);
+    }
+
+    .message {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 245, 248, 0.9));
+      border-radius: 16px;
+      padding: 20px 22px;
+      margin-bottom: 22px;
+      border: 1px solid var(--border);
+      font-size: clamp(15px, 2vw, 17px);
+      line-height: 1.85;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+
+    @keyframes bloom-in {
+      0% {
+        opacity: 0;
+        transform: translateY(16px) scale(0.97);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .body {
+        padding: 20px;
+      }
+      .header {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="petals" aria-hidden="true">
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+  </div>
+
+  <main class="card" role="main" aria-live="polite">
+    <div class="header">
+      <div class="icon" aria-hidden="true"></div>
+      <span class="label">樱花推送</span>
+    </div>
+
+    <div class="body">
+      <h1 id="title">消息推送</h1>
+      <div class="message" id="message">无告警信息</div>
+      <div class="footer">
+        <span id="date">无时间信息</span>
+      </div>
+    </div>
+  </main>
+
+    <script>
+    const query = new URLSearchParams(window.location.search);
+    const title = query.get('title') || '消息推送';
+    const message = query.get('message') || '无告警信息';
+    const date = query.get('date') || '无时间信息';
+
+    function escapeHtml(value) {
+      return value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function renderMarkdown(value) {
+      const normalized = value.replace(/\r\n/g, '\n');
+      const escaped = escapeHtml(normalized);
+
+      return escaped
+        .replace(/^#{1,6}\s+(.*)$/gm, '<strong>$1</strong>')
+        .replace(/^\s*[-*+]\s+(.*)$/gm, '• $1')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/__(.+?)__/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/_(.+?)_/g, '<em>$1</em>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+        .replace(/\n/g, '<br>');
+    }
+
+    const pageTitleEl = document.getElementById('pageTitle');
+    const titleEl = document.getElementById('title');
+    const messageEl = document.getElementById('message');
+    const dateEl = document.getElementById('date');
+
+    if (pageTitleEl) pageTitleEl.textContent = title;
+    if (titleEl) titleEl.textContent = title;
+    if (messageEl) messageEl.innerHTML = renderMarkdown(message);
+
+    if (dateEl) {
+      const rawDateText = dateEl.textContent || '';
+      const datePrefix = rawDateText.includes('无时间信息') ? rawDateText.replace('无时间信息', '') : '';
+      dateEl.textContent = `${datePrefix}${date}`;
+    }
+  </script>
+</body>
+
+</html>
+
+
