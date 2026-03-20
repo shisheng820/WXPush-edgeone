@@ -284,18 +284,59 @@ export async function onRequest(context) {
          background: #fdf6f0;
          border-color: #8b5c47;
       }
-      pre {
-        background: #2d2620;
-        color: #f8f1eb;
-        padding: 16px;
-        border-radius: 8px;
-        white-space: pre-wrap;
-        word-break: break-all;
-      }
       .skin-preview {
         margin-top: 8px;
         font-size: 13px;
         color: #8c7e73;
+        margin-bottom: 24px;
+      }
+      /* Terminal UI Styles */
+      .terminal-window {
+        background: #1e1e1e;
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        overflow: hidden;
+        border: 1px solid #333;
+        text-align: left;
+      }
+      .terminal-header {
+        background: #323233;
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #111;
+      }
+      .terminal-buttons {
+        display: flex;
+        gap: 8px;
+      }
+      .t-btn {
+        width: 12px; height: 12px; border-radius: 50%;
+      }
+      .close-btn { background: #ff5f56; }
+      .min-btn { background: #ffbd2e; }
+      .max-btn { background: #27c93f; }
+      .terminal-title {
+        color: #999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+        font-size: 13px;
+        margin-left: 16px;
+      }
+      .terminal-body {
+        padding: 16px;
+        background: rgba(0, 0, 0, 0.9);
+      }
+      #responseArea {
+        margin: 0;
+        background: transparent;
+        color: #00ff00;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        word-break: break-all;
+        padding: 0;
+        border-radius: 0;
       }
     </style>
   </head>
@@ -304,7 +345,7 @@ export async function onRequest(context) {
       <h1>WXPush 测试页面</h1>
       <p class="hint">当前 token：<strong>${sanitizedToken}</strong></p>
 
-      <form id="testForm" method="POST" action="/wxsend">
+      <form id="testForm" onsubmit="event.preventDefault(); return false;">
 
         <label for="title">标题 (title)</label>
         <input id="title" name="title" type="text" value="测试标题" />
@@ -350,9 +391,20 @@ export async function onRequest(context) {
           <button type="button" id="clearBtn">清空</button>
         </div>
       </form>
-      <div id="responseCard" style="display:none; margin-top: 20px;">
-        <label for="responseArea">响应</label>
-        <pre id="responseArea"></pre>
+      <div id="responseCard" style="display:none; margin-top: 32px;">
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <div class="terminal-buttons">
+              <span class="t-btn close-btn"></span>
+              <span class="t-btn min-btn"></span>
+              <span class="t-btn max-btn"></span>
+            </div>
+            <div class="terminal-title">bash - POST /wxsend</div>
+          </div>
+          <div class="terminal-body">
+            <pre id="responseArea"></pre>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -454,7 +506,22 @@ export async function onRequest(context) {
 
             const response = await fetch('/wxsend', { method: 'POST', headers, body: JSON.stringify(payload) });
             const responseText = await response.text();
-            responseArea.textContent = 'Status: ' + response.status + '\n\n' + responseText;
+            
+            let termText = '$ curl -X POST /wxsend \\ \n';
+            termText += '  -H "Content-Type: application/json" \\ \n';
+            if (token) termText += '  -H "Authorization: ' + token + '" \\ \n';
+            termText += '  -d \'{...}\'\n\n';
+            termText += '> HTTP/1.1 ' + response.status + ' ' + (response.statusText || '') + '\n';
+            
+            try {
+              const jsonObj = JSON.parse(responseText);
+              termText += '> Content-Type: application/json\n\n';
+              termText += JSON.stringify(jsonObj, null, 2);
+            } catch(e) {
+              termText += '\n' + responseText;
+            }
+            
+            responseArea.textContent = termText;
             responseCard.style.display = 'block';
           } catch (err) {
             responseArea.textContent = 'Fetch error: ' + err.message;
