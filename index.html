@@ -6,222 +6,509 @@
     <title>WXPush 推送平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+      :root {
+        /* MD3 Default Theme (Warm Magazine) */
+        --md-sys-color-primary: #8b5c47;
+        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-primary-container: #ffdbcc;
+        --md-sys-color-on-primary-container: #351a0b;
+        --md-sys-color-surface: #fdf6f0;
+        --md-sys-color-surface-container: #ffffff;
+        --md-sys-color-on-surface: #201a17;
+        --md-sys-color-on-surface-variant: #52443d;
+        --md-sys-color-outline: #85736b;
+        --md-sys-color-outline-variant: #d7c2b9;
+        --md-sys-color-error: #ba1a1a;
+        --md-sys-elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30);
+        --md-sys-elevation-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30);
+      }
+      
+      body.theme-cyberpunk {
+        --md-sys-color-primary: #00e5ff;
+        --md-sys-color-on-primary: #000000;
+        --md-sys-color-primary-container: #004d40;
+        --md-sys-color-on-primary-container: #00e5ff;
+        --md-sys-color-surface: #0a0a0a;
+        --md-sys-color-surface-container: #1a1a1a;
+        --md-sys-color-on-surface: #ffffff;
+        --md-sys-color-on-surface-variant: #b3ebff;
+        --md-sys-color-outline: #008b8b;
+        --md-sys-color-outline-variant: #333333;
+        --md-sys-elevation-1: 0px 4px 12px rgba(0, 229, 255, 0.15);
+      }
+
+      body.theme-sakura {
+        --md-sys-color-primary: #d81b60;
+        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-primary-container: #f8bbd0;
+        --md-sys-color-on-primary-container: #880e4f;
+        --md-sys-color-surface: #fff0f5;
+        --md-sys-color-surface-container: #ffffff;
+        --md-sys-color-on-surface: #4a148c;
+        --md-sys-color-on-surface-variant: #7b1fa2;
+        --md-sys-color-outline: #f06292;
+        --md-sys-color-outline-variant: #f8bbd0;
+      }
+
+      body.theme-terminal-neon {
+        --md-sys-color-primary: #00ff00;
+        --md-sys-color-on-primary: #000000;
+        --md-sys-color-primary-container: #003300;
+        --md-sys-color-on-primary-container: #00ff00;
+        --md-sys-color-surface: #000000;
+        --md-sys-color-surface-container: #111111;
+        --md-sys-color-on-surface: #00ff00;
+        --md-sys-color-on-surface-variant: #00cc00;
+        --md-sys-color-outline: #00cc00;
+        --md-sys-color-outline-variant: #004400;
+      }
+
+      body.theme-ocean-breeze {
+        --md-sys-color-primary: #0288d1;
+        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-primary-container: #b3e5fc;
+        --md-sys-color-on-primary-container: #01579b;
+        --md-sys-color-surface: #e1f5fe;
+        --md-sys-color-surface-container: #ffffff;
+        --md-sys-color-on-surface: #01579b;
+        --md-sys-color-on-surface-variant: #0277bd;
+        --md-sys-color-outline: #0288d1;
+        --md-sys-color-outline-variant: #b3e5fc;
+      }
+      
+      body.theme-hacker-dark {
+        --md-sys-color-primary: #4caf50;
+        --md-sys-color-on-primary: #000000;
+        --md-sys-color-primary-container: #1b5e20;
+        --md-sys-color-on-primary-container: #81c784;
+        --md-sys-color-surface: #121212;
+        --md-sys-color-surface-container: #1e1e1e;
+        --md-sys-color-on-surface: #e0e0e0;
+        --md-sys-color-on-surface-variant: #9e9e9e;
+        --md-sys-color-outline: #4caf50;
+        --md-sys-color-outline-variant: #333333;
+      }
+
+      body.theme-aurora-glass {
+        --md-sys-color-primary: #00bfa5;
+        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-primary-container: #b2dfdb;
+        --md-sys-color-on-primary-container: #004d40;
+        --md-sys-color-surface: #e0f2f1;
+        --md-sys-color-surface-container: rgba(255, 255, 255, 0.8);
+        --md-sys-color-on-surface: #004d40;
+        --md-sys-color-on-surface-variant: #00796b;
+        --md-sys-color-outline: #00bfa5;
+        --md-sys-color-outline-variant: #b2dfdb;
+      }
+
+      body.theme-minimalist-light {
+        --md-sys-color-primary: #000000;
+        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-primary-container: #e0e0e0;
+        --md-sys-color-on-primary-container: #000000;
+        --md-sys-color-surface: #ffffff;
+        --md-sys-color-surface-container: #f5f5f5;
+        --md-sys-color-on-surface: #000000;
+        --md-sys-color-on-surface-variant: #424242;
+        --md-sys-color-outline: #000000;
+        --md-sys-color-outline-variant: #e0e0e0;
+      }
+
+      body.theme-quiet-night {
+        --md-sys-color-primary: #5c6bc0;
+        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-primary-container: #3949ab;
+        --md-sys-color-on-primary-container: #e8eaf6;
+        --md-sys-color-surface: #0a0e27;
+        --md-sys-color-surface-container: #1a237e;
+        --md-sys-color-on-surface: #e8eaf6;
+        --md-sys-color-on-surface-variant: #c5cae9;
+        --md-sys-color-outline: #5c6bc0;
+        --md-sys-color-outline-variant: #3949ab;
+      }
+
+      body.theme-sunset-glow {
+        --md-sys-color-primary: #ff5722;
+        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-primary-container: #ffccbc;
+        --md-sys-color-on-primary-container: #bf360c;
+        --md-sys-color-surface: #fbe9e7;
+        --md-sys-color-surface-container: #ffffff;
+        --md-sys-color-on-surface: #bf360c;
+        --md-sys-color-on-surface-variant: #d84315;
+        --md-sys-color-outline: #ff5722;
+        --md-sys-color-outline-variant: #ffccbc;
+      }
+
+      body.theme-macos-hacker {
+        --md-sys-color-primary: #ffffff;
+        --md-sys-color-on-primary: #000000;
+        --md-sys-color-primary-container: #424242;
+        --md-sys-color-on-primary-container: #ffffff;
+        --md-sys-color-surface: #212121;
+        --md-sys-color-surface-container: #303030;
+        --md-sys-color-on-surface: #ffffff;
+        --md-sys-color-on-surface-variant: #e0e0e0;
+        --md-sys-color-outline: #9e9e9e;
+        --md-sys-color-outline-variant: #616161;
+      }
+
       body {
-        font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
         min-height: 100vh;
         margin: 0;
         padding: 24px;
-        background: #fdf6f0;
-        color: #4a3f35;
+        background: var(--md-sys-color-surface);
+        color: var(--md-sys-color-on-surface);
+        transition: background 0.4s ease, color 0.4s ease;
         box-sizing: border-box;
       }
-      .container {
-        background: #fff;
-        border-radius: 16px;
-        box-shadow: 0 10px 30px rgba(139, 92, 71, 0.1);
-        border: 1px solid #eee1d5;
-        padding: 40px;
-        max-width: 720px;
+      
+      .layout-container {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
         width: 100%;
-        text-align: left;
+        max-width: 1100px;
+        margin-top: 24px;
       }
+      
+      @media (min-width: 800px) {
+        .layout-container {
+          flex-direction: row;
+          align-items: flex-start;
+        }
+      }
+
+      .md-card {
+        background: var(--md-sys-color-surface-container);
+        border-radius: 16px;
+        box-shadow: var(--md-sys-elevation-1);
+        padding: 32px;
+        transition: all 0.3s ease;
+        border: 1px solid var(--md-sys-color-outline-variant);
+        flex: 1;
+      }
+
+      .left-panel {
+        flex: 1.2;
+      }
+
+      .right-panel {
+        flex: 0.8;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        position: sticky;
+        top: 24px;
+      }
+
       h1 {
-        margin: 0 0 12px;
-        font-size: 32px;
+        margin: 0 0 8px;
+        font-size: 28px;
         font-weight: 700;
-        text-align: center;
-        color: #8b5c47;
+        color: var(--md-sys-color-primary);
+        letter-spacing: -0.5px;
       }
+
       .hint {
-        color: #7c6d60;
+        color: var(--md-sys-color-on-surface-variant);
         margin: 0 0 24px;
-        font-size: 15px;
-        line-height: 1.6;
-        text-align: center;
-      }
-      .warning-box {
-        background: #fff5e6;
-        border-left: 4px solid #f59e0b;
-        padding: 12px 16px;
-        border-radius: 0 8px 8px 0;
-        margin-bottom: 24px;
         font-size: 14px;
-        color: #92400e;
+        line-height: 1.5;
       }
+
+      .warning-box {
+        background: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
+        padding: 12px 16px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        font-size: 13px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .md-input-container {
+        position: relative;
+        margin-bottom: 24px;
+      }
+
       label {
         display: block;
-        margin: 16px 0 8px;
-        font-weight: 700;
-        color: #5d4d42;
+        margin-bottom: 6px;
+        font-weight: 500;
+        font-size: 14px;
+        color: var(--md-sys-color-on-surface-variant);
+        transition: color 0.2s ease;
       }
+
       input[type=text], input[type=password], textarea, select {
         width: 100%;
-        padding: 12px;
-        border: 1px solid #ddd1c5;
-        border-radius: 8px;
-        background: #fcfaf8;
-        transition: all 0.2s ease;
+        padding: 14px 16px;
+        border: 1px solid var(--md-sys-color-outline);
+        border-radius: 4px;
+        background: transparent;
+        color: var(--md-sys-color-on-surface);
         box-sizing: border-box;
         font-family: inherit;
-        font-size: 14px;
-        color: #4a3f35;
-      }
-      input[type=text]:focus, input[type=password]:focus, textarea:focus, select:focus {
-        outline: none;
-        border-color: #8b5c47;
-        background: #ffffff;
-        box-shadow: 0 0 0 2px rgba(139, 92, 71, 0.15);
-      }
-      .required-mark {
-        color: #dc2626;
-        margin-left: 4px;
-      }
-      button {
-        margin-top: 24px;
-        padding: 12px 24px;
-        border-radius: 8px;
-        border: 0;
-        background: #8b5c47;
-        color: #fff;
-        cursor: pointer;
-        font-weight: 700;
+        font-size: 16px;
         transition: all 0.2s ease;
       }
-      button:hover {
-        background: #734b39;
-        transform: translateY(-1px);
+
+      input[type=text]:focus, input[type=password]:focus, textarea:focus, select:focus {
+        outline: none;
+        border-color: var(--md-sys-color-primary);
+        border-width: 2px;
+        padding: 13px 15px; /* Adjust padding to prevent jumping when border-width changes */
       }
-      button:disabled {
-        background: #ccc;
+      
+      .md-input-container:focus-within label {
+        color: var(--md-sys-color-primary);
+      }
+
+      .required-mark {
+        color: var(--md-sys-color-error);
+      }
+
+      .action-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      /* MD3 Filled Button */
+      button.btn-primary {
+        background: var(--md-sys-color-primary);
+        color: var(--md-sys-color-on-primary);
+        border: none;
+        border-radius: 20px;
+        padding: 0 24px;
+        height: 40px;
+        font-family: inherit;
+        font-weight: 500;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      }
+
+      button.btn-primary:hover {
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        opacity: 0.92;
+      }
+      
+      button.btn-primary:disabled {
+        background: var(--md-sys-color-outline-variant);
+        color: var(--md-sys-color-on-surface-variant);
         cursor: not-allowed;
-        transform: none;
+        box-shadow: none;
       }
-      button#clearBtn {
-         background: #f8f1eb;
-         color: #8b5c47;
-         border: 1px solid #eee1d5;
+
+      /* MD3 Outlined Button */
+      button.btn-outlined {
+        background: transparent;
+        color: var(--md-sys-color-primary);
+        border: 1px solid var(--md-sys-color-outline);
+        border-radius: 20px;
+        padding: 0 24px;
+        height: 40px;
+        font-family: inherit;
+        font-weight: 500;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
       }
-       button#clearBtn:hover {
-         background: #fdf6f0;
-         border-color: #8b5c47;
+
+      button.btn-outlined:hover {
+        background: var(--md-sys-color-outline-variant);
       }
-      .skin-preview {
-        margin-top: 8px;
-        font-size: 13px;
-        color: #8c7e73;
-        margin-bottom: 24px;
-      }
-      .response-card {
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(139, 92, 71, 0.08);
-        border: 1px solid #eee1d5;
+      
+      .preview-wrapper {
+        position: relative;
+        width: 100%;
         overflow: hidden;
+        border-radius: 12px;
+        border: 1px solid var(--md-sys-color-outline-variant);
+        background: #fff;
+        height: 450px;
       }
-      .response-header {
-        background: #fdf6f0;
-        padding: 12px 20px;
-        border-bottom: 1px solid #eee1d5;
-        font-weight: 700;
-        color: #8b5c47;
-        font-size: 15px;
+      
+      iframe#skinPreviewIframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: #fff;
       }
-      .response-body {
-        padding: 20px;
-        background: #fcfaf8;
+
+      #responseCard {
+        margin-top: 24px;
+        background: var(--md-sys-color-surface-container);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        border-radius: 12px;
+        padding: 16px;
+        display: none;
       }
+      
       #responseArea {
         margin: 0;
-        color: #5d4d42;
-        font-family: inherit;
-        font-size: 14px;
-        line-height: 1.6;
+        font-family: monospace;
+        font-size: 13px;
         white-space: pre-wrap;
         word-break: break-all;
+        color: var(--md-sys-color-on-surface);
       }
+
       footer {
-        margin-top: 32px;
-        font-size: 13px;
-        color: #8c7e73;
+        margin-top: 48px;
+        font-size: 14px;
+        color: var(--md-sys-color-on-surface-variant);
         text-align: center;
+        padding-bottom: 24px;
       }
+      
+      footer a {
+        color: var(--md-sys-color-primary);
+        text-decoration: none;
+        font-weight: 500;
+      }
+      
+      footer a:hover {
+        text-decoration: underline;
+      }
+      
+      .header-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .version-badge {
+        background: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      
     </style>
   </head>
-  <body>
-    <div class="container">
-      <h1>WXPush 推送平台</h1>
-      <p class="hint">极简、可靠的微信消息推送服务。纯前端与 Serverless 转发，服务端不记录任何密钥与隐私数据。</p>
+  <body class="theme-warm-magazine">
+    <div class="layout-container">
       
-      <div class="warning-box">
-        <strong>注意：</strong>强烈推荐使用<strong>微信测试号</strong>！正式公众号的 API 强制要求配置 IP 白名单，由于云函数 IP 是动态的，填入正式公众号可能会收到 "invalid ip" 的报错。
+      <!-- Left Panel: Form -->
+      <div class="left-panel md-card">
+        <div class="header-title-row">
+          <h1>WXPush 推送平台</h1>
+          <span class="version-badge">v1.2.0</span>
+        </div>
+        <p class="hint">纯前端与 Serverless 转发，服务端不记录任何密钥与隐私数据。</p>
+        
+        <div class="warning-box">
+          <svg style="width:20px;height:20px" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 2L1 21h22M12 6l7.53 13H4.47M11 10v4h2v-4m-2 6v2h2v-2" />
+          </svg>
+          推介使用微信测试号，正式公众号 API 强依赖 IP 白名单，可能会报错 "invalid ip"。
+        </div>
+
+        <form id="testForm">
+          <div class="md-input-container">
+            <label for="token">站点管理员 Token (可选)</label>
+            <input id="token" name="token" type="password" placeholder="如果是管理员，请输入 Token" />
+            <p style="font-size: 12px; color: var(--md-sys-color-on-surface-variant); margin-top: 4px;">无 Token 时，下发四项目必填。</p>
+          </div>
+
+          <div class="md-input-container">
+            <label for="title">消息标题 (title) <span class="required-mark">*</span></label>
+            <input id="title" name="title" type="text" value="测试标题" required />
+          </div>
+
+          <div class="md-input-container">
+            <label for="content">消息内容 (content) <span class="required-mark">*</span></label>
+            <textarea id="content" name="content" rows="4" required>这是WXPush在Material Design 3下的测试内容</textarea>
+          </div>
+
+          <div class="md-input-container">
+            <label for="userid">用户 ID (userid)<span id="req-msg-userid" class="required-mark">*</span></label>
+            <input id="userid" name="userid" type="text" placeholder="接收者的微信 OpenID" />
+          </div>
+
+          <div class="md-input-container">
+            <label for="appid">WX_APPID<span id="req-msg-appid" class="required-mark">*</span></label>
+            <input id="appid" name="appid" type="text" placeholder="微信公众平台/测试号的 AppID" />
+          </div>
+
+          <div class="md-input-container">
+            <label for="secret">WX_SECRET<span id="req-msg-secret" class="required-mark">*</span></label>
+            <input id="secret" name="secret" type="password" placeholder="微信公众平台/测试号的 AppSecret" />
+          </div>
+
+          <div class="md-input-container">
+            <label for="template_id">模板 ID (template_id)<span id="req-msg-template" class="required-mark">*</span></label>
+            <input id="template_id" name="template_id" type="text" placeholder="申请的模板消息 ID" />
+          </div>
+
+          <div class="md-input-container">
+            <label for="base_url">跳转链接 base_url (可选)</label>
+            <input id="base_url" name="base_url" type="text" placeholder="默认使用右侧选中皮肤链接" />
+          </div>
+
+          <div class="action-row">
+            <button class="btn-primary" id="sendBtn" type="submit">发送测试请求</button>
+            <button class="btn-outlined" type="button" id="clearBtn">重置</button>
+          </div>
+        </form>
+
+        <div id="responseCard">
+          <h4 style="margin: 0 0 12px; color: var(--md-sys-color-primary);">请求响应</h4>
+          <pre id="responseArea"></pre>
+        </div>
       </div>
 
-      <form id="testForm">
-        
-        <label for="token">站点管理员 Token (可选)</label>
-        <input id="token" name="token" type="password" placeholder="如果是本站管理员，请输入 Token 以使用系统级内置配置" />
-        <p style="font-size: 12px; color: #8c7e73; margin-top: 6px;">提示：如果没有 Token，则必须填写下方的 APPID 等四项配置。</p>
-
-        <label for="title">标题 (title) <span class="required-mark">*</span></label>
-        <input id="title" name="title" type="text" value="测试标题" required />
-
-        <label for="content">内容 (content) <span class="required-mark">*</span></label>
-        <textarea id="content" name="content" rows="4" required>这是测试内容</textarea>
-
-        <label for="userid">用户 ID (userid)<span id="req-msg-userid" class="required-mark">*</span></label>
-        <input id="userid" name="userid" type="text" placeholder="接收者的微信 OpenID (多个用 | 分隔)" />
-
-        <label for="appid">WX_APPID<span id="req-msg-appid" class="required-mark">*</span></label>
-        <input id="appid" name="appid" type="text" placeholder="微信公众平台/测试号的 AppID" />
-
-        <label for="secret">WX_SECRET<span id="req-msg-secret" class="required-mark">*</span></label>
-        <input id="secret" name="secret" type="password" placeholder="微信公众平台/测试号的 AppSecret" />
-
-        <label for="template_id">模板 ID (template_id)<span id="req-msg-template" class="required-mark">*</span></label>
-        <input id="template_id" name="template_id" type="text" placeholder="申请的模板消息 ID" />
-
-        <label for="skin">内置皮肤 (skin，可选)</label>
-        <select id="skin" name="skin">
-          <option value="warm-magazine">暖调杂志</option>
-          <option value="cyberpunk">赛博朋克</option>
-          <option value="sakura">樱花</option>
-          <option value="terminal-neon">终端霓虹</option>
-          <option value="ocean-breeze">海洋微风</option>
-          <option value="hacker-dark">黑客暗黑</option>
-          <option value="aurora-glass">极光玻璃</option>
-          <option value="minimalist-light">极简浅色</option>
-          <option value="quiet-night">静谧的夜空</option>
-          <option value="sunset-glow">落日余晖</option>
-          <option value="macos-hacker">macOS 极客</option>
-        </select>
-        <div id="skinPreview" class="skin-preview"></div>
-
-        <label for="base_url">跳转链接 base_url (可选，留空将使用上方皮肤)</label>
-        <input id="base_url" name="base_url" type="text" placeholder="用户点击卡片后的跳转地址" />
-
-        <div style="display:flex;gap:12px;align-items:center">
-          <button id="sendBtn" type="submit">发送测试请求</button>
-          <button type="button" id="clearBtn">清空</button>
+      <!-- Right Panel: Skin Config & Preview -->
+      <div class="right-panel">
+        <div class="md-card" style="flex: unset; padding: 24px;">
+          <h2 style="margin: 0 0 16px; font-size: 18px; color: var(--md-sys-color-primary);">个性化皮肤</h2>
+          <div class="md-input-container" style="margin-bottom: 0;">
+            <label for="skin">内置皮肤样式选择</label>
+            <select id="skin" name="skin">
+              <option value="warm-magazine">暖调杂志 (Warm Magazine)</option>
+              <option value="cyberpunk">赛博朋克 (Cyberpunk)</option>
+              <option value="sakura">樱花 (Sakura)</option>
+              <option value="terminal-neon">终端霓虹 (Terminal Neon)</option>
+              <option value="ocean-breeze">海洋微风 (Ocean Breeze)</option>
+              <option value="hacker-dark">黑客暗黑 (Hacker Dark)</option>
+              <option value="aurora-glass">极光玻璃 (Aurora Glass)</option>
+              <option value="minimalist-light">极简浅色 (Minimalist Light)</option>
+              <option value="quiet-night">静谧夜空 (Quiet Night)</option>
+              <option value="sunset-glow">落日余晖 (Sunset Glow)</option>
+              <option value="macos-hacker">macOS 极客 (macOS Hacker)</option>
+            </select>
+          </div>
         </div>
-      </form>
-      <div id="responseCard" style="display:none; margin-top: 32px;">
-        <div class="response-card">
-          <div class="response-header">请求响应</div>
-          <div class="response-body">
-            <pre id="responseArea"></pre>
+
+        <div class="md-card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+          <div style="padding: 16px 24px; background: var(--md-sys-color-surface); border-bottom: 1px solid var(--md-sys-color-outline-variant);">
+             <h2 style="margin: 0; font-size: 16px; color: var(--md-sys-color-primary);">实时演示展示</h2>
+          </div>
+          <div class="preview-wrapper">
+            <iframe id="skinPreviewIframe" src=""></iframe>
           </div>
         </div>
       </div>
+      
     </div>
     
     <footer>
-      WXPush - 开源微信推送服务 | <a href="https://github.com/shisheng820/WXPush-edgeone" target="_blank" style="color: #8b5c47;">GitHub</a>
+      作者：诗笙 | <a href="https://github.com/shisheng820/WXPush-edgeone" target="_blank">查看 GitHub 仓库</a>
     </footer>
 
     <script>
@@ -231,16 +518,18 @@
       const responseArea = document.getElementById('responseArea');
       const responseCard = document.getElementById('responseCard');
       const skinSelect = document.getElementById('skin');
-      const skinPreview = document.getElementById('skinPreview');
+      const iframePreview = document.getElementById('skinPreviewIframe');
       const tokenInput = document.getElementById('token');
+      const titleInput = document.getElementById('title');
+      const contentInput = document.getElementById('content');
 
-      // Auto-fill token from URL parameters
+      /* Auto-fill token from URL parameters */
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('token')) {
         tokenInput.value = urlParams.get('token');
       }
 
-      // Dynamic required marks logic based on token
+      /* Dynamic required marks */
       function updateDynamicFields() {
         const hasToken = tokenInput.value.trim().length > 0;
         const displayVal = hasToken ? 'none' : 'inline';
@@ -252,6 +541,7 @@
       tokenInput.addEventListener('input', updateDynamicFields);
       updateDynamicFields();
 
+      /* Theme Switching & Iframe update */
       const skinRouteMap = {
         'warm-magazine': '/skins/warm-magazine/index.html',
         cyberpunk: '/skins/cyberpunk/index.html',
@@ -266,119 +556,131 @@
         'macos-hacker': '/skins/MacOS_Hacker_Theme-LGT/index.html'
       };
 
-      function withAccessQuery(rawUrl) {
-        try {
-          const source = new URL(window.location.href);
-          const target = new URL(rawUrl, window.location.origin);
-          const eoToken = source.searchParams.get('eo_token');
-          const eoTime = source.searchParams.get('eo_time');
+      function updateThemeAndIframe() {
+        // 1. Update Body Theme Class
+        const selectedSkin = skinSelect.value || 'warm-magazine';
+        document.body.className = `theme-${selectedSkin}`;
 
-          if (eoToken && !target.searchParams.has('eo_token')) {
-            target.searchParams.set('eo_token', eoToken);
-          }
-          if (eoTime && !target.searchParams.has('eo_time')) {
-            target.searchParams.set('eo_time', eoTime);
-          }
+        // 2. Update Iframe Preview URL
+        const route = skinRouteMap[selectedSkin] || skinRouteMap['warm-magazine'];
+        const titleVal = titleInput.value || '无标题';
+        const contentVal = contentInput.value || '无内容';
+        
+        // Mock date
+        const dateObj = new Date();
+        const dateStr = dateObj.getFullYear() + '-' + 
+            String(dateObj.getMonth() + 1).padStart(2,'0') + '-' + 
+            String(dateObj.getDate()).padStart(2,'0') + ' ' + 
+            String(dateObj.getHours()).padStart(2,'0') + ':' + 
+            String(dateObj.getMinutes()).padStart(2,'0') + ':' + 
+            String(dateObj.getSeconds()).padStart(2,'0');
 
-          return target.toString();
-        } catch (error) {
-          return rawUrl;
-        }
+        const params = new URLSearchParams();
+        params.set('title', titleVal);
+        params.set('message', contentVal.replace(/\n/g, '~n~'));
+        params.set('date', dateStr);
+
+        iframePreview.src = `${route}?${params.toString()}`;
       }
 
-      function updateSkinPreview() {
-        if (!skinSelect || !skinPreview) return;
-        const selected = skinSelect.value || 'warm-magazine';
-        const route = skinRouteMap[selected] || '/skins/warm-magazine/index.html';
-        skinPreview.textContent = '皮肤链接: ' + withAccessQuery(window.location.origin + route);
+      skinSelect.addEventListener('change', updateThemeAndIframe);
+      
+      // Debounce inputs for iframe update to prevent flickering
+      let debounceTimer;
+      function debouncedIframeUpdate() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(updateThemeAndIframe, 300);
       }
+      titleInput.addEventListener('input', debouncedIframeUpdate);
+      contentInput.addEventListener('input', debouncedIframeUpdate);
 
-      if (form && sendBtn && clearBtn && responseArea && responseCard) {
-        updateSkinPreview();
-        if (skinSelect) {
-          skinSelect.addEventListener('change', updateSkinPreview);
+      // Initial Call
+      updateThemeAndIframe();
+
+      clearBtn.addEventListener('click', () => {
+        document.getElementById('token').value = '';
+        document.getElementById('title').value = '测试标题';
+        document.getElementById('content').value = '这是WXPush在Material Design 3下的测试内容';
+        document.getElementById('userid').value = '';
+        document.getElementById('appid').value = '';
+        document.getElementById('secret').value = '';
+        document.getElementById('template_id').value = '';
+        document.getElementById('skin').value = 'warm-magazine';
+        document.getElementById('base_url').value = '';
+        updateDynamicFields();
+        updateThemeAndIframe();
+        responseArea.textContent = '';
+        responseCard.style.display = 'none';
+      });
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        // Frontend validation
+        const tokenVal = document.getElementById('token').value.trim();
+        if (!tokenVal) {
+          const missing = [];
+          if (!document.getElementById('userid').value.trim()) missing.push('用户 ID');
+          if (!document.getElementById('appid').value.trim()) missing.push('WX_APPID');
+          if (!document.getElementById('secret').value.trim()) missing.push('WX_SECRET');
+          if (!document.getElementById('template_id').value.trim()) missing.push('模板 ID');
+          
+          if (missing.length > 0) {
+            alert('未填写管理员Token时，以下字段必填：\\n' + missing.join('、'));
+            return;
+          }
         }
 
-        clearBtn.addEventListener('click', () => {
-          document.getElementById('token').value = '';
-          document.getElementById('title').value = '';
-          document.getElementById('content').value = '';
-          document.getElementById('userid').value = '';
-          document.getElementById('appid').value = '';
-          document.getElementById('secret').value = '';
-          document.getElementById('template_id').value = '';
-          document.getElementById('skin').value = 'warm-magazine';
-          document.getElementById('base_url').value = '';
-          updateSkinPreview();
-          updateDynamicFields();
-          responseArea.textContent = '';
-          responseCard.style.display = 'none';
-        });
+        sendBtn.disabled = true;
+        const originalText = sendBtn.textContent;
+        sendBtn.textContent = '发送中...';
+        responseCard.style.display = 'none';
 
-        form.addEventListener('submit', async (event) => {
-          event.preventDefault();
-
-          // Frontend validation
-          const tokenVal = document.getElementById('token').value.trim();
-          if (!tokenVal) {
-            const missing = [];
-            if (!document.getElementById('userid').value.trim()) missing.push('用户 ID');
-            if (!document.getElementById('appid').value.trim()) missing.push('WX_APPID');
-            if (!document.getElementById('secret').value.trim()) missing.push('WX_SECRET');
-            if (!document.getElementById('template_id').value.trim()) missing.push('模板 ID');
-            
-            if (missing.length > 0) {
-              alert('未填写管理员Token时，以下字段必填：\\n' + missing.join('、'));
-              return;
-            }
-          }
-
-          sendBtn.disabled = true;
-          const originalText = sendBtn.textContent;
-          sendBtn.textContent = '发送中...';
-          responseCard.style.display = 'none';
-
-          const formData = new FormData(form);
-          const payload = {};
-          for (const [k, v] of formData.entries()) {
-             if (v) payload[k] = v;
-          }
-
-          if (!payload.base_url) {
-            const selected = (payload.skin || 'warm-magazine').toLowerCase();
-            const route = skinRouteMap[selected] || '/skins/warm-magazine/index.html';
-            payload.base_url = withAccessQuery(window.location.origin + route);
-          }
-
+        const formData = new FormData(form);
+        const payload = {};
+        for (const [k, v] of formData.entries()) {
+           if (v && k !== 'skin') payload[k] = v;
+        }
+        
+        // Ensure we pass the skin selected outside the form
+        payload.skin = skinSelect.value;
+        
+        // Calculate dynamic base_url logic (used in backend implicitly, but we can set it here)
+        if (!payload.base_url) {
           try {
-            const headers = { 'Content-Type': 'application/json' };
-            const response = await fetch('/wxsend', { method: 'POST', headers, body: JSON.stringify(payload) });
-            const responseText = await response.text();
-            
-            const lines = [];
-            lines.push("Status: HTTP " + response.status + " " + (response.statusText || ""));
-            lines.push("");
-            
-            try {
-              const jsonObj = JSON.parse(responseText);
-              lines.push("Response Body:");
-              lines.push(JSON.stringify(jsonObj, null, 2));
-            } catch(e) {
-              lines.push("Response Body:");
-              lines.push(responseText);
-            }
-            
-            responseArea.textContent = lines.join('\\n');
-            responseCard.style.display = 'block';
-          } catch (err) {
-            responseArea.textContent = 'Fetch error: ' + err.message;
-            responseCard.style.display = 'block';
-          } finally {
-            sendBtn.disabled = false;
-            sendBtn.textContent = originalText;
+            const rawUrl = window.location.origin + skinRouteMap[payload.skin];
+            payload.base_url = rawUrl; // simplified; backend appends eo_token if needed
+          } catch(e) {}
+        }
+
+        try {
+          const headers = { 'Content-Type': 'application/json' };
+          const response = await fetch('/wxsend', { method: 'POST', headers, body: JSON.stringify(payload) });
+          const responseText = await response.text();
+          
+          const lines = [];
+          lines.push("Status: HTTP " + response.status + " " + (response.statusText || ""));
+          lines.push("");
+          
+          try {
+            const jsonObj = JSON.parse(responseText);
+            lines.push("Response Body:");
+            lines.push(JSON.stringify(jsonObj, null, 2));
+          } catch(e) {
+            lines.push("Response Body:");
+            lines.push(responseText);
           }
-        });
-      }
+          
+          responseArea.textContent = lines.join('\\n');
+          responseCard.style.display = 'block';
+        } catch (err) {
+          responseArea.textContent = 'Fetch error: ' + err.message;
+          responseCard.style.display = 'block';
+        } finally {
+          sendBtn.disabled = false;
+          sendBtn.textContent = originalText;
+        }
+      });
     </script>
   </body>
 </html>
