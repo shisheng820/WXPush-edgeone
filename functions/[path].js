@@ -345,7 +345,7 @@ export async function onRequest(context) {
       <h1>WXPush 测试页面</h1>
       <p class="hint">当前 token：<strong>${sanitizedToken}</strong></p>
 
-      <form id="testForm" onsubmit="event.preventDefault(); return false;">
+      <form id="testForm">
 
         <label for="title">标题 (title)</label>
         <input id="title" name="title" type="text" value="测试标题" />
@@ -507,21 +507,25 @@ export async function onRequest(context) {
             const response = await fetch('/wxsend', { method: 'POST', headers, body: JSON.stringify(payload) });
             const responseText = await response.text();
             
-            let termText = '$ curl -X POST /wxsend \\ \n';
-            termText += '  -H "Content-Type: application/json" \\ \n';
-            if (token) termText += '  -H "Authorization: ' + token + '" \\ \n';
-            termText += '  -d \'{...}\'\n\n';
-            termText += '> HTTP/1.1 ' + response.status + ' ' + (response.statusText || '') + '\n';
+            const lines = [];
+            lines.push("$ curl -X POST /wxsend \\\\");
+            lines.push('  -H "Content-Type: application/json" \\\\');
+            if (token) lines.push('  -H "Authorization: ' + token + '" \\\\');
+            lines.push("  -d '{...}'");
+            lines.push("");
+            lines.push("> HTTP/1.1 " + response.status + " " + (response.statusText || ""));
             
             try {
               const jsonObj = JSON.parse(responseText);
-              termText += '> Content-Type: application/json\n\n';
-              termText += JSON.stringify(jsonObj, null, 2);
+              lines.push("> Content-Type: application/json");
+              lines.push("");
+              lines.push(JSON.stringify(jsonObj, null, 2));
             } catch(e) {
-              termText += '\n' + responseText;
+              lines.push("");
+              lines.push(responseText);
             }
             
-            responseArea.textContent = termText;
+            responseArea.textContent = lines.join('\\n');
             responseCard.style.display = 'block';
           } catch (err) {
             responseArea.textContent = 'Fetch error: ' + err.message;
