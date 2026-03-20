@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>WXPush 推送平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 24px;
+        background: #fdf6f0;
+        color: #4a3f35;
+        box-sizing: border-box;
+      }
+      .container {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(139, 92, 71, 0.1);
+        border: 1px solid #eee1d5;
+        padding: 40px;
+        max-width: 720px;
+        width: 100%;
+        text-align: left;
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: 32px;
+        font-weight: 700;
+        text-align: center;
+        color: #8b5c47;
+      }
+      .hint {
+        color: #7c6d60;
+        margin: 0 0 24px;
+        font-size: 15px;
+        line-height: 1.6;
+        text-align: center;
+      }
+      .warning-box {
+        background: #fff5e6;
+        border-left: 4px solid #f59e0b;
+        padding: 12px 16px;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 24px;
+        font-size: 14px;
+        color: #92400e;
+      }
+      label {
+        display: block;
+        margin: 16px 0 8px;
+        font-weight: 700;
+        color: #5d4d42;
+      }
+      input[type=text], input[type=password], textarea, select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd1c5;
+        border-radius: 8px;
+        background: #fcfaf8;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+        font-family: inherit;
+        font-size: 14px;
+        color: #4a3f35;
+      }
+      input[type=text]:focus, input[type=password]:focus, textarea:focus, select:focus {
+        outline: none;
+        border-color: #8b5c47;
+        background: #ffffff;
+        box-shadow: 0 0 0 2px rgba(139, 92, 71, 0.15);
+      }
+      .required-mark {
+        color: #dc2626;
+        margin-left: 4px;
+      }
+      button {
+        margin-top: 24px;
+        padding: 12px 24px;
+        border-radius: 8px;
+        border: 0;
+        background: #8b5c47;
+        color: #fff;
+        cursor: pointer;
+        font-weight: 700;
+        transition: all 0.2s ease;
+      }
+      button:hover {
+        background: #734b39;
+        transform: translateY(-1px);
+      }
+      button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+      button#clearBtn {
+         background: #f8f1eb;
+         color: #8b5c47;
+         border: 1px solid #eee1d5;
+      }
+       button#clearBtn:hover {
+         background: #fdf6f0;
+         border-color: #8b5c47;
+      }
+      .skin-preview {
+        margin-top: 8px;
+        font-size: 13px;
+        color: #8c7e73;
+        margin-bottom: 24px;
+      }
+      .response-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(139, 92, 71, 0.08);
+        border: 1px solid #eee1d5;
+        overflow: hidden;
+      }
+      .response-header {
+        background: #fdf6f0;
+        padding: 12px 20px;
+        border-bottom: 1px solid #eee1d5;
+        font-weight: 700;
+        color: #8b5c47;
+        font-size: 15px;
+      }
+      .response-body {
+        padding: 20px;
+        background: #fcfaf8;
+      }
+      #responseArea {
+        margin: 0;
+        color: #5d4d42;
+        font-family: inherit;
+        font-size: 14px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+      footer {
+        margin-top: 32px;
+        font-size: 13px;
+        color: #8c7e73;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>WXPush 推送平台</h1>
+      <p class="hint">极简、可靠的微信消息推送服务。纯前端与 Serverless 转发，服务端不记录任何密钥与隐私数据。</p>
+      
+      <div class="warning-box">
+        <strong>注意：</strong>强烈推荐使用<strong>微信测试号</strong>！正式公众号的 API 强制要求配置 IP 白名单，由于云函数 IP 是动态的，填入正式公众号可能会收到 "invalid ip" 的报错。
+      </div>
+
+      <form id="testForm">
+        
+        <label for="token">站点管理员 Token (可选)</label>
+        <input id="token" name="token" type="password" placeholder="如果是本站管理员，请输入 Token 以使用系统级内置配置" />
+        <p style="font-size: 12px; color: #8c7e73; margin-top: 6px;">提示：如果没有 Token，则必须填写下方的 APPID 等四项配置。</p>
+
+        <label for="title">标题 (title) <span class="required-mark">*</span></label>
+        <input id="title" name="title" type="text" value="测试标题" required />
+
+        <label for="content">内容 (content) <span class="required-mark">*</span></label>
+        <textarea id="content" name="content" rows="4" required>这是测试内容</textarea>
+
+        <label for="userid">用户 ID (userid)<span id="req-msg-userid" class="required-mark">*</span></label>
+        <input id="userid" name="userid" type="text" placeholder="接收者的微信 OpenID (多个用 | 分隔)" />
+
+        <label for="appid">WX_APPID<span id="req-msg-appid" class="required-mark">*</span></label>
+        <input id="appid" name="appid" type="text" placeholder="微信公众平台/测试号的 AppID" />
+
+        <label for="secret">WX_SECRET<span id="req-msg-secret" class="required-mark">*</span></label>
+        <input id="secret" name="secret" type="password" placeholder="微信公众平台/测试号的 AppSecret" />
+
+        <label for="template_id">模板 ID (template_id)<span id="req-msg-template" class="required-mark">*</span></label>
+        <input id="template_id" name="template_id" type="text" placeholder="申请的模板消息 ID" />
+
+        <label for="skin">内置皮肤 (skin，可选)</label>
+        <select id="skin" name="skin">
+          <option value="warm-magazine">暖调杂志</option>
+          <option value="cyberpunk">赛博朋克</option>
+          <option value="sakura">樱花</option>
+          <option value="terminal-neon">终端霓虹</option>
+          <option value="ocean-breeze">海洋微风</option>
+          <option value="hacker-dark">黑客暗黑</option>
+          <option value="aurora-glass">极光玻璃</option>
+          <option value="minimalist-light">极简浅色</option>
+          <option value="quiet-night">静谧的夜空</option>
+          <option value="sunset-glow">落日余晖</option>
+          <option value="macos-hacker">macOS 极客</option>
+        </select>
+        <div id="skinPreview" class="skin-preview"></div>
+
+        <label for="base_url">跳转链接 base_url (可选，留空将使用上方皮肤)</label>
+        <input id="base_url" name="base_url" type="text" placeholder="用户点击卡片后的跳转地址" />
+
+        <div style="display:flex;gap:12px;align-items:center">
+          <button id="sendBtn" type="submit">发送测试请求</button>
+          <button type="button" id="clearBtn">清空</button>
+        </div>
+      </form>
+      <div id="responseCard" style="display:none; margin-top: 32px;">
+        <div class="response-card">
+          <div class="response-header">请求响应</div>
+          <div class="response-body">
+            <pre id="responseArea"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <footer>
+      WXPush - 开源微信推送服务 | <a href="https://github.com/shisheng820/WXPush-edgeone" target="_blank" style="color: #8b5c47;">GitHub</a>
+    </footer>
+
+    <script>
+      const form = document.getElementById('testForm');
+      const sendBtn = document.getElementById('sendBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const responseArea = document.getElementById('responseArea');
+      const responseCard = document.getElementById('responseCard');
+      const skinSelect = document.getElementById('skin');
+      const skinPreview = document.getElementById('skinPreview');
+      const tokenInput = document.getElementById('token');
+
+      // Auto-fill token from URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('token')) {
+        tokenInput.value = urlParams.get('token');
+      }
+
+      // Dynamic required marks logic based on token
+      function updateDynamicFields() {
+        const hasToken = tokenInput.value.trim().length > 0;
+        const displayVal = hasToken ? 'none' : 'inline';
+        document.getElementById('req-msg-userid').style.display = displayVal;
+        document.getElementById('req-msg-appid').style.display = displayVal;
+        document.getElementById('req-msg-secret').style.display = displayVal;
+        document.getElementById('req-msg-template').style.display = displayVal;
+      }
+      tokenInput.addEventListener('input', updateDynamicFields);
+      updateDynamicFields();
+
+      const skinRouteMap = {
+        'warm-magazine': '/skins/warm-magazine/index.html',
+        cyberpunk: '/skins/cyberpunk/index.html',
+        sakura: '/skins/sakura/index.html',
+        'terminal-neon': '/skins/terminal-neon/index.html',
+        'ocean-breeze': '/skins/ocean-breeze/index.html',
+        'hacker-dark': '/skins/hacker-dark/index.html',
+        'aurora-glass': '/skins/aurora-glass/index.html',
+        'minimalist-light': '/skins/minimalist-light/index.html',
+        'quiet-night': '/skins/quiet-night/index.html',
+        'sunset-glow': '/skins/sunset-glow/index.html',
+        'macos-hacker': '/skins/MacOS_Hacker_Theme-LGT/index.html'
+      };
+
+      function withAccessQuery(rawUrl) {
+        try {
+          const source = new URL(window.location.href);
+          const target = new URL(rawUrl, window.location.origin);
+          const eoToken = source.searchParams.get('eo_token');
+          const eoTime = source.searchParams.get('eo_time');
+
+          if (eoToken && !target.searchParams.has('eo_token')) {
+            target.searchParams.set('eo_token', eoToken);
+          }
+          if (eoTime && !target.searchParams.has('eo_time')) {
+            target.searchParams.set('eo_time', eoTime);
+          }
+
+          return target.toString();
+        } catch (error) {
+          return rawUrl;
+        }
+      }
+
+      function updateSkinPreview() {
+        if (!skinSelect || !skinPreview) return;
+        const selected = skinSelect.value || 'warm-magazine';
+        const route = skinRouteMap[selected] || '/skins/warm-magazine/index.html';
+        skinPreview.textContent = '皮肤链接: ' + withAccessQuery(window.location.origin + route);
+      }
+
+      if (form && sendBtn && clearBtn && responseArea && responseCard) {
+        updateSkinPreview();
+        if (skinSelect) {
+          skinSelect.addEventListener('change', updateSkinPreview);
+        }
+
+        clearBtn.addEventListener('click', () => {
+          document.getElementById('token').value = '';
+          document.getElementById('title').value = '';
+          document.getElementById('content').value = '';
+          document.getElementById('userid').value = '';
+          document.getElementById('appid').value = '';
+          document.getElementById('secret').value = '';
+          document.getElementById('template_id').value = '';
+          document.getElementById('skin').value = 'warm-magazine';
+          document.getElementById('base_url').value = '';
+          updateSkinPreview();
+          updateDynamicFields();
+          responseArea.textContent = '';
+          responseCard.style.display = 'none';
+        });
+
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+
+          // Frontend validation
+          const tokenVal = document.getElementById('token').value.trim();
+          if (!tokenVal) {
+            const missing = [];
+            if (!document.getElementById('userid').value.trim()) missing.push('用户 ID');
+            if (!document.getElementById('appid').value.trim()) missing.push('WX_APPID');
+            if (!document.getElementById('secret').value.trim()) missing.push('WX_SECRET');
+            if (!document.getElementById('template_id').value.trim()) missing.push('模板 ID');
+            
+            if (missing.length > 0) {
+              alert('未填写管理员Token时，以下字段必填：\\n' + missing.join('、'));
+              return;
+            }
+          }
+
+          sendBtn.disabled = true;
+          const originalText = sendBtn.textContent;
+          sendBtn.textContent = '发送中...';
+          responseCard.style.display = 'none';
+
+          const formData = new FormData(form);
+          const payload = {};
+          for (const [k, v] of formData.entries()) {
+             if (v) payload[k] = v;
+          }
+
+          if (!payload.base_url) {
+            const selected = (payload.skin || 'warm-magazine').toLowerCase();
+            const route = skinRouteMap[selected] || '/skins/warm-magazine/index.html';
+            payload.base_url = withAccessQuery(window.location.origin + route);
+          }
+
+          try {
+            const headers = { 'Content-Type': 'application/json' };
+            const response = await fetch('/wxsend', { method: 'POST', headers, body: JSON.stringify(payload) });
+            const responseText = await response.text();
+            
+            const lines = [];
+            lines.push("Status: HTTP " + response.status + " " + (response.statusText || ""));
+            lines.push("");
+            
+            try {
+              const jsonObj = JSON.parse(responseText);
+              lines.push("Response Body:");
+              lines.push(JSON.stringify(jsonObj, null, 2));
+            } catch(e) {
+              lines.push("Response Body:");
+              lines.push(responseText);
+            }
+            
+            responseArea.textContent = lines.join('\\n');
+            responseCard.style.display = 'block';
+          } catch (err) {
+            responseArea.textContent = 'Fetch error: ' + err.message;
+            responseCard.style.display = 'block';
+          } finally {
+            sendBtn.disabled = false;
+            sendBtn.textContent = originalText;
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
