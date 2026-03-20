@@ -349,6 +349,27 @@
         background: var(--md-sys-color-outline-variant);
       }
       
+      .zoom-btn {
+        background: transparent;
+        border: none;
+        color: var(--md-sys-color-on-surface-variant);
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-family: inherit;
+        font-size: 12px;
+        transition: all 0.2s ease;
+      }
+      .zoom-btn:hover {
+        background: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
+      }
+      .zoom-btn.active {
+        background: var(--md-sys-color-primary);
+        color: var(--md-sys-color-on-primary);
+        font-weight: 700;
+      }
+      
       .preview-wrapper {
         position: relative;
         width: 100%;
@@ -494,20 +515,32 @@
       <!-- Right Panel: Skin Config & Preview -->
       <div class="right-panel">
         
-        <!-- Usage Guide Card -->
-        <div class="md-card" style="flex: unset; padding: 24px;">
-          <h2 style="margin: 0 0 16px; font-size: 18px; color: var(--md-sys-color-primary);">快速使用教程</h2>
-          <ol style="margin: 0; padding-left: 20px; font-size: 14px; color: var(--md-sys-color-on-surface); line-height: 1.6;">
-            <li>前往 <a href="https://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index" target="_blank" rel="noopener noreferrer" style="color: var(--md-sys-color-primary); text-decoration: none; font-weight: 700;">微信测试账号页面</a> 扫码登录。</li>
-            <li>获取并复制页面上的 <b>appID</b> 和 <b>appsecret</b> 填入左侧。</li>
-            <li>用手机扫描测试号二维码关注，获取右侧表格中的 <b>微信号 (userid)</b> 填入左侧。</li>
-            <li>在“新增测试模板”中，填写以下两行内容：
-              <pre style="background: var(--md-sys-color-surface); padding: 8px 12px; margin: 8px 0; border-radius: 6px; border: 1px solid var(--md-sys-color-outline-variant); font-size: 13px; color: var(--md-sys-color-on-surface-variant); user-select: all;">{{title.DATA}}
+        <!-- Usage Guide Card (Collapsible) -->
+        <details class="md-card" style="flex: unset; padding: 24px; cursor: pointer;">
+          <summary style="font-size: 18px; color: var(--md-sys-color-primary); font-weight: 700; outline: none; list-style: none; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <svg style="width:22px;height:22px" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              快速使用教程
+            </div>
+            <svg class="details-arrow" style="width:24px;height:24px; transition: transform 0.3s; color: var(--md-sys-color-on-surface-variant);" viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>
+            <style>
+              details > summary::-webkit-details-marker { display: none; }
+              details[open] .details-arrow { transform: rotate(180deg); }
+            </style>
+          </summary>
+          <div style="margin-top: 16px; cursor: default;">
+            <ol style="margin: 0; padding-left: 20px; font-size: 14px; color: var(--md-sys-color-on-surface); line-height: 1.6;">
+              <li>前往 <a href="https://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index" target="_blank" rel="noopener noreferrer" style="color: var(--md-sys-color-primary); text-decoration: none; font-weight: 700;">微信测试账号页面</a> 扫码登录。</li>
+              <li>获取并复制页面上的 <b>appID</b> 和 <b>appsecret</b> 填入左侧。</li>
+              <li>用手机扫描测试号二维码关注，获取右侧表格中的 <b>微信号 (userid)</b> 填入左侧。</li>
+              <li>在“新增测试模板”中，填写以下两行内容：
+                <pre style="background: var(--md-sys-color-surface); padding: 8px 12px; margin: 8px 0; border-radius: 6px; border: 1px solid var(--md-sys-color-outline-variant); font-size: 13px; color: var(--md-sys-color-on-surface-variant); user-select: all;">{{title.DATA}}
 {{content.DATA}}</pre>
-            </li>
-            <li>复制生成的 <b>模板 ID (template_id)</b> 填入左侧，即可进行推送！</li>
-          </ol>
-        </div>
+              </li>
+              <li>复制生成的 <b>模板 ID (template_id)</b> 填入左侧，即可进行推送！</li>
+            </ol>
+          </div>
+        </details>
         
         <!-- Config Management Card -->
         <div class="md-card" style="flex: unset; padding: 24px;">
@@ -542,8 +575,19 @@
         </div>
 
         <div class="md-card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
-          <div style="padding: 16px 24px; background: var(--md-sys-color-surface); border-bottom: 1px solid var(--md-sys-color-outline-variant);">
+          <div style="padding: 16px 24px; background: var(--md-sys-color-surface); border-bottom: 1px solid var(--md-sys-color-outline-variant); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
              <h2 style="margin: 0; font-size: 16px; color: var(--md-sys-color-primary);">实时演示展示</h2>
+             <div style="display: flex; align-items: center; gap: 16px; margin-left: auto;">
+               <div style="display: flex; align-items: center; gap: 4px; background: var(--md-sys-color-surface-container); padding: 2px; border-radius: 8px; border: 1px solid var(--md-sys-color-outline-variant);">
+                 <button type="button" class="zoom-btn active" data-zoom="1">100%</button>
+                 <button type="button" class="zoom-btn" data-zoom="0.9">90%</button>
+                 <button type="button" class="zoom-btn" data-zoom="0.7">70%</button>
+               </div>
+               <a id="previewDirectLink" href="#" target="_blank" style="font-size: 13px; color: var(--md-sys-color-primary); font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 4px; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1">
+                 网页直链
+                 <svg style="width:14px;height:14px" viewBox="0 0 24 24"><path fill="currentColor" d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+               </a>
+             </div>
           </div>
           <div class="preview-wrapper">
             <iframe id="skinPreviewIframe" src=""></iframe>
@@ -626,7 +670,10 @@
         params.set('message', contentVal.replace(/\n/g, '~n~'));
         params.set('date', dateStr);
 
-        iframePreview.src = `${route}?${params.toString()}`;
+        const finalUrl = `${route}?${params.toString()}`;
+        iframePreview.src = finalUrl;
+        const linkElem = document.getElementById('previewDirectLink');
+        if(linkElem) linkElem.href = finalUrl;
       }
 
       skinSelect.addEventListener('change', updateThemeAndIframe);
@@ -716,6 +763,20 @@
       // Auto load config on page initialization
       window.addEventListener('DOMContentLoaded', () => {
         loadConfig(false);
+      });
+
+      // Zoom logic
+      const zoomBtns = document.querySelectorAll('.zoom-btn');
+      zoomBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          zoomBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const scale = parseFloat(btn.getAttribute('data-zoom'));
+          iframePreview.style.transform = `scale(${scale})`;
+          iframePreview.style.transformOrigin = 'top left';
+          iframePreview.style.width = `${100 / scale}%`;
+          iframePreview.style.height = `${100 / scale}%`;
+        });
       });
 
       clearBtn.addEventListener('click', () => {
