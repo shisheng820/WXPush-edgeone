@@ -151,73 +151,6 @@
         }
        
         /* Markdown 样式覆盖 */
-        .info-content h1, .info-content h2, .info-content h3, .info-content h4, .info-content h5, .info-content h6 {
-            color: #00bcd4;
-            margin-top: 1em;
-            margin-bottom: 0.5em;
-            font-weight: 400;
-        }
-        .info-content p {
-            margin-bottom: 1em;
-            line-height: 1.6;
-        }
-        .info-content strong {
-            color: #e0f7fa;
-            font-weight: 600;
-        }
-        .info-content em {
-            color: #80deea;
-            font-style: italic;
-        }
-        .info-content code {
-            background: rgba(0, 0, 0, 0.3);
-            color: #00bcd4;
-            padding: 2px 4px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-        }
-        .info-content pre {
-            background: rgba(0, 0, 0, 0.4);
-            color: #e0f7fa;
-            padding: 1em;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin-bottom: 1em;
-        }
-        .info-content blockquote {
-            border-left: 4px solid #009688;
-            margin: 1em 0;
-            padding-left: 1em;
-            color: #80deea;
-            font-style: italic;
-        }
-        .info-content ul, .info-content ol {
-            margin-bottom: 1em;
-            padding-left: 2em;
-        }
-        .info-content li {
-            margin-bottom: 0.5em;
-        }
-        .info-content a {
-            color: #00bcd4;
-            text-decoration: none;
-        }
-        .info-content a:hover {
-            text-decoration: underline;
-        }
-        .info-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1em;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .info-content th, .info-content td {
-            padding: 0.75em;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
         .info-content th {
             background: rgba(0, 188, 212, 0.2);
             color: #00bcd4;
@@ -298,7 +231,55 @@
                 opacity: 0;
             }
         }
-    </style>
+    
+    #message {
+      white-space: pre-wrap;
+    }
+
+    .copy-tag {
+      background: rgba(128, 128, 128, 0.2);
+      color: inherit;
+      padding: 0px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid rgba(128, 128, 128, 0.5);
+      transition: all 0.2s;
+      display: inline-block;
+      margin: 0 4px;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    .copy-tag:hover {
+      background: rgba(128, 128, 128, 0.4);
+      transform: scale(1.05);
+      box-shadow: 0 0 8px rgba(128, 128, 128, 0.3);
+    }
+    .copy-tag:active {
+      transform: scale(0.95);
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.3s, bottom 0.3s;
+      pointer-events: none;
+      z-index: 1000;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .toast.show {
+      opacity: 1;
+      bottom: 40px;
+    }
+
+  </style>
 </head>
 <body>
     <div class="particles" id="particles"></div>
@@ -316,68 +297,69 @@
             <div class="info-content" id="date">无时间信息</div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
     <script>
-        const query = new URLSearchParams(window.location.search);
-        const title = query.get('title') || '消息推送';
-        const message = query.get('message') || '无告警信息';
-        const date = query.get('date') || '无时间信息';
+    const query = new URLSearchParams(window.location.search);
+    const title = query.get('title') || '消息推送';
+    const message = query.get('message') || '无告警信息';
+    const date = query.get('date') || '无时间信息';
 
-        function renderMarkdown(value) {
-            if (typeof marked !== 'undefined') {
-                return marked.parse(value, { breaks: true });
-            }
-            return value;
+    function showToast(msg) {
+        let toast = document.getElementById('toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = 'toast';
+            document.body.appendChild(toast);
         }
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2000);
+    }
 
-        // 创建动态粒子背景
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            if (!particlesContainer) return;
-            const particleCount = 25;
-            const colors = [
-                'rgba(0, 188, 212, 0.2)',
-                'rgba(0, 150, 136, 0.2)',
-                'rgba(77, 182, 172, 0.15)'
-            ];
-           
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-               
-                const size = Math.random() * 3 + 1;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-               
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.background = randomColor;
-               
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-               
-                particle.style.animationDelay = `${Math.random() * 20}s`;
-                particle.style.animationDuration = `${20 + Math.random() * 15}s`;
-               
-                particlesContainer.appendChild(particle);
-            }
-        }
+    function copyText(element) {
+        const text = element.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('已复制: ' + text);
+        }).catch(err => {
+            showToast('复制失败');
+        });
+    }
 
-        // 填充页面内容
-        function fillContent() {
-            const titleEl = document.getElementById('title');
-            const messageEl = document.getElementById('message');
-            const dateEl = document.getElementById('date');
+    function escapeHTML(str) {
+        return str.replace(/[&<>'"]/g, 
+            tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag] || tag)
+        );
+    }
 
-            if (titleEl) titleEl.textContent = title;
-            if (messageEl) messageEl.innerHTML = renderMarkdown(message);
-            if (dateEl) dateEl.textContent = date;
-        }
+    function parseCustomMessage(value) {
+        let escapedValue = escapeHTML(value);
+        return escapedValue.replace(/\[\[(.*?)\]\]/g, (match, p1) => {
+            return `<span class="copy-tag" onclick="copyText(this)" title="点击复制">${p1}</span>`;
+        });
+    }
 
-        // 页面加载时调用
-        window.onload = function() {
-            createParticles();
-            fillContent();
-        };
-    </script>
+    const pageTitleEl = document.getElementById('pageTitle');
+    const titleEl = document.getElementById('title');
+    const messageEl = document.getElementById('message');
+    const dateEl = document.getElementById('date');
+
+    if (pageTitleEl) pageTitleEl.textContent = title;
+    if (titleEl) titleEl.textContent = title;
+    if (messageEl) messageEl.innerHTML = parseCustomMessage(message);
+
+    if (dateEl) {
+        const rawDateText = dateEl.textContent || '';
+        const datePrefix = rawDateText.includes('无时间信息') ? rawDateText.replace('无时间信息', '') : '';
+        dateEl.textContent = `${datePrefix}${date}`;
+    }
+</script>
 </body>
 </html>

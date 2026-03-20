@@ -247,6 +247,54 @@
         padding: 20px;
       }
     }
+  
+    #message {
+      white-space: pre-wrap;
+    }
+
+    .copy-tag {
+      background: rgba(128, 128, 128, 0.2);
+      color: inherit;
+      padding: 0px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid rgba(128, 128, 128, 0.5);
+      transition: all 0.2s;
+      display: inline-block;
+      margin: 0 4px;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    .copy-tag:hover {
+      background: rgba(128, 128, 128, 0.4);
+      transform: scale(1.05);
+      box-shadow: 0 0 8px rgba(128, 128, 128, 0.3);
+    }
+    .copy-tag:active {
+      transform: scale(0.95);
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.3s, bottom 0.3s;
+      pointer-events: none;
+      z-index: 1000;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .toast.show {
+      opacity: 1;
+      bottom: 40px;
+    }
+
   </style>
 </head>
 
@@ -277,18 +325,53 @@
     </div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
   <script>
     const query = new URLSearchParams(window.location.search);
     const title = query.get('title') || '消息推送';
     const message = query.get('message') || '无告警信息';
     const date = query.get('date') || '无时间信息';
 
-    function renderMarkdown(value) {
-      if (typeof marked !== 'undefined') {
-        return marked.parse(value, { breaks: true });
-      }
-      return value;
+    function showToast(msg) {
+        let toast = document.getElementById('toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = 'toast';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2000);
+    }
+
+    function copyText(element) {
+        const text = element.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('已复制: ' + text);
+        }).catch(err => {
+            showToast('复制失败');
+        });
+    }
+
+    function escapeHTML(str) {
+        return str.replace(/[&<>'"]/g, 
+            tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag] || tag)
+        );
+    }
+
+    function parseCustomMessage(value) {
+        let escapedValue = escapeHTML(value);
+        return escapedValue.replace(/\[\[(.*?)\]\]/g, (match, p1) => {
+            return `<span class="copy-tag" onclick="copyText(this)" title="点击复制">${p1}</span>`;
+        });
     }
 
     const pageTitleEl = document.getElementById('pageTitle');
@@ -298,14 +381,14 @@
 
     if (pageTitleEl) pageTitleEl.textContent = title;
     if (titleEl) titleEl.textContent = title;
-    if (messageEl) messageEl.innerHTML = renderMarkdown(message);
+    if (messageEl) messageEl.innerHTML = parseCustomMessage(message);
 
     if (dateEl) {
-      const rawDateText = dateEl.textContent || '';
-      const datePrefix = rawDateText.includes('无时间信息') ? rawDateText.replace('无时间信息', '') : '';
-      dateEl.textContent = `${datePrefix}${date}`;
+        const rawDateText = dateEl.textContent || '';
+        const datePrefix = rawDateText.includes('无时间信息') ? rawDateText.replace('无时间信息', '') : '';
+        dateEl.textContent = `${datePrefix}${date}`;
     }
-  </script>
+</script>
 </body>
 
 </html>
