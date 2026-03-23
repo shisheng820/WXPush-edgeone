@@ -2,7 +2,7 @@
 name: wxpush
 description: "微信模板消息推送 skill。支持三种 wxpush API 格式：edgeone（默认）、wxpush（frankiejun 项目）、go-wxpush。使用场景：发送微信推送消息、配置 wxpush 环境。"
 homepage: https://github.com/shisheng820/WXPush-edgeone
-metadata: { "openclaw": { "emoji": "💬", "requires": { "bins": ["curl"] } } }
+metadata: { "openclaw": { "emoji": "💬" } }
 ---
 
 # WXPush Skill
@@ -31,37 +31,66 @@ WXPUSH_BASE_URL=                           # 跳转 URL（可选）
 
 ## 发送消息
 
-读取 `~/.config/wxpush/wxpush.env`，根据 mode 构造 curl 请求：
+读取 `~/.config/wxpush/wxpush.env`，根据 mode 选择 curl 或 Python 发送请求。
+
+优先使用 curl（最简洁），不可用时用 Python（标准库，无需额外依赖）。
 
 ### edgeone 模式（默认）
 
 ```bash
-# Token 模式
+# curl
 curl -s -X POST "${WXPUSH_API_URL}/wxsend" \
   -H "Content-Type: application/json" \
   -d "{\"title\":\"标题\",\"content\":\"内容\",\"token\":\"${WXPUSH_API_TOKEN}\"}"
 
-# 无 Token 模式
-curl -s -X POST "${WXPUSH_API_URL}/wxsend" \
-  -H "Content-Type: application/json" \
-  -d "{\"title\":\"标题\",\"content\":\"内容\",\"appid\":\"${WXPUSH_APPID}\",\"secret\":\"${WXPUSH_SECRET}\",\"userid\":\"${WXPUSH_USERID}\",\"template_id\":\"${WXPUSH_TEMPLATE_ID}\"}"
+# Python（标准库，无需安装）
+python3 -c "
+import json, os, sys
+from urllib.request import Request, urlopen
+cfg = {k.strip(): v.strip() for k, _, v in (l.partition('=') for l in open(os.path.expanduser('~/.config/wxpush/wxpush.env')) if '=' in l and not l.startswith('#'))}
+data = json.dumps({'title': sys.argv[1], 'content': sys.argv[2], 'token': cfg.get('WXPUSH_API_TOKEN','')}).encode()
+req = Request(cfg.get('WXPUSH_API_URL','').rstrip('/') + '/wxsend', data=data, headers={'Content-Type':'application/json'})
+print(urlopen(req, timeout=15).read().decode())
+" "标题" "内容"
 ```
 
 ### wxpush 模式
 
 ```bash
+# curl
 curl -s -X POST "${WXPUSH_API_URL}/wxsend" \
   -H "Authorization: ${WXPUSH_API_TOKEN}" \
   -H "Content-Type: application/json" \
   -d "{\"title\":\"标题\",\"content\":\"内容\"}"
+
+# Python
+python3 -c "
+import json, os, sys
+from urllib.request import Request, urlopen
+cfg = {k.strip(): v.strip() for k, _, v in (l.partition('=') for l in open(os.path.expanduser('~/.config/wxpush/wxpush.env')) if '=' in l and not l.startswith('#'))}
+data = json.dumps({'title': sys.argv[1], 'content': sys.argv[2]}).encode()
+req = Request(cfg.get('WXPUSH_API_URL','').rstrip('/') + '/wxsend', data=data, headers={'Content-Type':'application/json','Authorization':cfg.get('WXPUSH_API_TOKEN','')})
+print(urlopen(req, timeout=15).read().decode())
+" "标题" "内容"
 ```
 
 ### go-wxpush 模式
 
 ```bash
+# curl
 curl -s -X POST "${WXPUSH_API_URL}/wxsend" \
   -H "Content-Type: application/json" \
   -d "{\"title\":\"标题\",\"content\":\"内容\",\"appid\":\"${WXPUSH_APPID}\",\"secret\":\"${WXPUSH_SECRET}\",\"userid\":\"${WXPUSH_USERID}\",\"template_id\":\"${WXPUSH_TEMPLATE_ID}\"}"
+
+# Python
+python3 -c "
+import json, os, sys
+from urllib.request import Request, urlopen
+cfg = {k.strip(): v.strip() for k, _, v in (l.partition('=') for l in open(os.path.expanduser('~/.config/wxpush/wxpush.env')) if '=' in l and not l.startswith('#'))}
+data = json.dumps({'title': sys.argv[1], 'content': sys.argv[2], 'appid': cfg.get('WXPUSH_APPID',''), 'secret': cfg.get('WXPUSH_SECRET',''), 'userid': cfg.get('WXPUSH_USERID',''), 'template_id': cfg.get('WXPUSH_TEMPLATE_ID','')}).encode()
+req = Request(cfg.get('WXPUSH_API_URL','').rstrip('/') + '/wxsend', data=data, headers={'Content-Type':'application/json'})
+print(urlopen(req, timeout=15).read().decode())
+" "标题" "内容"
 ```
 
 ## 三种 API 格式差异
