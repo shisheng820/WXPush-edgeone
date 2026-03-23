@@ -30,7 +30,17 @@ WXPUSH_SKIN=                               # 皮肤（可选，edgeone 原生支
 WXPUSH_BASE_URL=                           # 跳转 URL（可选）
 ```
 
-### 2. 发送消息
+### 2. 验证配置
+
+配置完成后，**务必发送一条测试消息**以确认配置正确：
+
+```bash
+bash ~/.config/opencode/skills/wxpush/scripts/wxpush.sh --title "配置测试" --content "如果收到此消息，说明 wxpush 配置成功 ✅"
+```
+
+如果收到消息，说明配置生效；如果返回错误，请检查 token、API 地址等配置项。
+
+### 3. 发送消息
 
 ```bash
 bash ~/.config/opencode/skills/wxpush/scripts/wxpush.sh --title "标题" --content "内容"

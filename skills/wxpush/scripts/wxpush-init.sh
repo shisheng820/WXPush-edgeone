@@ -133,5 +133,20 @@ if [[ "$MODE" == "edgeone" && -n "$API_TOKEN" && -z "$APPID" ]]; then
   echo "   Token 模式：只需 token，wx 配置在服务端处理。"
 fi
 echo ""
-echo "发送测试消息："
-echo "  bash ~/.config/opencode/skills/wxpush/scripts/wxpush.sh --title \"测试\" --content \"来自 wxpush 的消息\""
+echo "=========================================="
+echo "⚠️  配置完成，请发送测试消息以确认配置生效！"
+echo "=========================================="
+echo ""
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+read -p "是否现在发送测试消息？(Y/n): " send_test
+if [[ "$send_test" != "n" && "$send_test" != "N" ]]; then
+  echo ""
+  echo "正在发送测试消息..."
+  bash "$SCRIPT_DIR/wxpush.sh" --title "配置测试" --content "如果收到此消息，说明 wxpush 配置成功 ✅"
+  echo ""
+  echo "如果收到消息则配置成功，如果报错请检查配置。"
+else
+  echo ""
+  echo "稍后可手动发送测试消息："
+  echo "  bash $SCRIPT_DIR/wxpush.sh --title \"测试\" --content \"来自 wxpush 的消息\""
+fi
