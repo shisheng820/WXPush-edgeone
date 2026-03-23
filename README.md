@@ -95,6 +95,42 @@ curl -X POST "https://<你的域名>/wxsend" \
 * `HTTP 403`：安全防护，请求者如果非要尝试携带 Token 但未配对通过。
 * `HTTP 500`：Server 后端透传了腾讯微信接口产生的各类错误。极大概率因为获取微信 Access Token 失败（IP 白名单限制未关等因素，参照下文提示）。
 
+## 🤖 AI 助手集成 (Skill)
+
+WXPush 提供了标准的 Skill，可通过 [ClawHub](https://clawhub.ai) 安装，让 AI 助手直接发送微信推送消息。
+
+**安装方式：**
+
+方式一：通过 ClawHub 安装
+```bash
+clawhub install shisheng820/wxpush
+```
+
+方式二：手动安装
+```bash
+# 克隆项目后，将 skills/wxpush 目录复制到 ~/.config/opencode/skills/ 或 ~/.config/openclaw/skills/
+cp -r skills/wxpush ~/.config/openclaw/skills/
+```
+
+方式三：让 AI 助手安装
+直接对 AI 助手说：`帮我安装 https://github.com/shisheng820/WXPush-edgeone/tree/master/skills/wxpush`
+
+**功能特性：**
+
+- 支持三种 API 模式切换：edgeone（默认）/ wxpush / go-wxpush
+- 自动引导配置，首次使用时交互式创建 `~/.config/wxpush/wxpush.env`
+- 优先使用 curl 发送，不可用时自动回退到 Python（标准库，无需额外依赖）
+- 配置完成后自动发送测试消息验证
+
+**使用示例：**
+
+安装后直接对 AI 助手说：
+- "发送一条微信推送，标题是'服务器告警'，内容是'CPU 使用率超过 90%'"
+- "用 wxpush 发消息给用户"
+- "切换到 go-wxpush 模式"
+
+详见 [ClawHub 页面](https://clawhub.ai/shisheng820/wxpush)。
+
 ## 💡 微信公众号 IP 白名单
 
 微信官方对于正式注册运营身份的 **“服务号 / 认证订阅公众号”** 有极度严苛的服务后端 **IP 白名单约束机制**。Serverless 体系如 EdgeOne/Cloudflare Workers，其网络下发流转使用的是一整个大集群的动态公网 IP 簇，如果你绑定正式号的 AppID/Secret，在请求 Access Token 时很大概率报错触发微信异常码 `40164 (invalid ip)` 进而抛出 500。
