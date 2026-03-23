@@ -103,7 +103,7 @@ WXPush 提供了标准的 Skill，可通过 [ClawHub](https://clawhub.ai) 安装
 
 方式一：通过 ClawHub 安装
 ```bash
-clawhub install shisheng820/wxpush
+clawhub install wxpush
 ```
 
 方式二：手动安装
