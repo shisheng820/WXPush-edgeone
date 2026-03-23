@@ -1,22 +1,18 @@
 ---
 name: wxpush
-description: |
-  微信模板消息推送 skill。支持三种 wxpush API 格式：edgeone（默认）、wxpush（frankiejun 项目）、go-wxpush。
-  使用场景：发送微信推送消息、配置 wxpush 环境、切换 API 模式。
-  触发条件：用户提到 wxpush、微信推送、推送消息。
+description: "微信模板消息推送 skill。支持三种 wxpush API 格式：edgeone（默认）、wxpush（frankiejun 项目）、go-wxpush。使用场景：发送微信推送消息、配置 wxpush 环境。"
+homepage: https://github.com/shisheng820/WXPush-edgeone
+metadata: { "openclaw": { "emoji": "💬", "requires": { "bins": ["curl", "python3"] } } }
+license: MIT-0
 ---
 
 # WXPush Skill
 
 微信模板消息推送，支持三种 API 格式切换（对应三个不同项目）。
 
-## 快速开始
+## 配置
 
-### 1. 配置
-
-读取 `~/.config/wxpush/wxpush.env`（如不存在，运行 `scripts/wxpush-init.sh` 引导创建）。
-
-配置字段：
+配置文件：`~/.config/wxpush/wxpush.env`
 
 ```bash
 WXPUSH_API_URL=https://your-service.com    # 服务地址
@@ -30,34 +26,92 @@ WXPUSH_SKIN=                               # 皮肤（可选，edgeone 原生支
 WXPUSH_BASE_URL=                           # 跳转 URL（可选）
 ```
 
-### 2. 发送消息
+如配置文件不存在，引导用户创建：询问 mode、token、wx 配置等，写入 `~/.config/wxpush/wxpush.env` 并设权限 600。
+
+配置完成后，**务必发送一条测试消息**以确认配置正确。
+
+## 发送消息
+
+读取 `~/.config/wxpush/wxpush.env`，根据 mode 选择 curl 或 Python 发送请求。
+
+优先使用 curl（最简洁），不可用时用 Python（标准库，无需额外依赖）。
+
+### edgeone 模式（默认）
 
 ```bash
-bash ~/.config/opencode/skills/wxpush/scripts/wxpush.sh --title "标题" --content "内容"
+# curl
+curl -s -X POST "${WXPUSH_API_URL}/wxsend" \
+  -H "Content-Type: application/json" \
+  -d "{\"title\":\"标题\",\"content\":\"内容\",\"token\":\"${WXPUSH_API_TOKEN}\"}"
+
+# Python（标准库，无需安装）
+python3 -c "
+import json, os, sys
+from urllib.request import Request, urlopen
+cfg = {k.strip(): v.strip() for k, _, v in (l.partition('=') for l in open(os.path.expanduser('~/.config/wxpush/wxpush.env')) if '=' in l and not l.startswith('#'))}
+data = json.dumps({'title': sys.argv[1], 'content': sys.argv[2], 'token': cfg.get('WXPUSH_API_TOKEN','')}).encode()
+req = Request(cfg.get('WXPUSH_API_URL','').rstrip('/') + '/wxsend', data=data, headers={'Content-Type':'application/json'})
+print(urlopen(req, timeout=15).read().decode())
+" "标题" "内容"
 ```
 
-所有参数均可通过命令行临时覆盖：`--appid` `--secret` `--userid` `--template_id` `--skin` `--token` 等。
+### wxpush 模式
+
+```bash
+# curl
+curl -s -X POST "${WXPUSH_API_URL}/wxsend" \
+  -H "Authorization: ${WXPUSH_API_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d "{\"title\":\"标题\",\"content\":\"内容\"}"
+
+# Python
+python3 -c "
+import json, os, sys
+from urllib.request import Request, urlopen
+cfg = {k.strip(): v.strip() for k, _, v in (l.partition('=') for l in open(os.path.expanduser('~/.config/wxpush/wxpush.env')) if '=' in l and not l.startswith('#'))}
+data = json.dumps({'title': sys.argv[1], 'content': sys.argv[2]}).encode()
+req = Request(cfg.get('WXPUSH_API_URL','').rstrip('/') + '/wxsend', data=data, headers={'Content-Type':'application/json','Authorization':cfg.get('WXPUSH_API_TOKEN','')})
+print(urlopen(req, timeout=15).read().decode())
+" "标题" "内容"
+```
+
+### go-wxpush 模式
+
+```bash
+# curl
+curl -s -X POST "${WXPUSH_API_URL}/wxsend" \
+  -H "Content-Type: application/json" \
+  -d "{\"title\":\"标题\",\"content\":\"内容\",\"appid\":\"${WXPUSH_APPID}\",\"secret\":\"${WXPUSH_SECRET}\",\"userid\":\"${WXPUSH_USERID}\",\"template_id\":\"${WXPUSH_TEMPLATE_ID}\"}"
+
+# Python
+python3 -c "
+import json, os, sys
+from urllib.request import Request, urlopen
+cfg = {k.strip(): v.strip() for k, _, v in (l.partition('=') for l in open(os.path.expanduser('~/.config/wxpush/wxpush.env')) if '=' in l and not l.startswith('#'))}
+data = json.dumps({'title': sys.argv[1], 'content': sys.argv[2], 'appid': cfg.get('WXPUSH_APPID',''), 'secret': cfg.get('WXPUSH_SECRET',''), 'userid': cfg.get('WXPUSH_USERID',''), 'template_id': cfg.get('WXPUSH_TEMPLATE_ID','')}).encode()
+req = Request(cfg.get('WXPUSH_API_URL','').rstrip('/') + '/wxsend', data=data, headers={'Content-Type':'application/json'})
+print(urlopen(req, timeout=15).read().decode())
+" "标题" "内容"
+```
 
 ## 三种 API 格式差异
-
-三个 mode 对应三个 GitHub 项目的 API 格式，不是部署方式的区别（三个项目都支持 Docker/源码部署）。
 
 | 特性 | edgeone | wxpush | go-wxpush |
 |------|---------|--------|-----------|
 | 对应项目 | [shisheng820/WXPush-edgeone](https://github.com/shisheng820/WXPush-edgeone) | [frankiejun/wxpush](https://github.com/frankiejun/wxpush) | [hezhizheng/go-wxpush](https://github.com/hezhizheng/go-wxpush) |
+| 默认地址 | `https://wxpush.hunluan.space` | 无（自填） | `https://push.hzz.cool` |
 | token | 可选 | **必填** | **无** |
 | token 传递方式 | query / body / header | query / header | — |
-| appid/secret/userid/template_id | 无 token 时必填 | 可选（服务端有默认值） | **必填**（无默认值） |
-| POST 鉴权 | body 或 header | header | 无 |
+| wx 配置 | 无 token 时必填 | 服务端有默认值 | **必填**（无默认值） |
 | skin | 原生支持 | 需配合 wxpushSkin | 需配合 wxpushSkin |
 | 独有参数 | — | — | `tz`（时区） |
 | 成功响应 | 标准微信响应 | `{msg: "Successfully sent..."}` | `{errcode: 0}` |
 
 ### mode 选择指南
 
-- **edgeone**：[shisheng820/WXPush-edgeone](https://github.com/shisheng820/WXPush-edgeone)，默认地址 `https://wxpush.hunluan.space`，支持有/无 token 两种方式
-- **wxpush**：[frankiejun/wxpush](https://github.com/frankiejun/wxpush)，需自填服务地址，必须配置 token，wx 配置在服务端
-- **go-wxpush**：[hezhizheng/go-wxpush](https://github.com/hezhizheng/go-wxpush)，默认地址 `https://push.hzz.cool`，无 token，每次调用必须传完整 wx 配置
+- **edgeone**：默认地址 `https://wxpush.hunluan.space`，支持有/无 token 两种方式
+- **wxpush**：需自填服务地址，必须配置 token，wx 配置在服务端
+- **go-wxpush**：默认地址 `https://push.hzz.cool`，无 token，每次调用必须传完整 wx 配置
 
 ## 详细 API 文档
 
@@ -67,7 +121,12 @@ bash ~/.config/opencode/skills/wxpush/scripts/wxpush.sh --title "标题" --conte
 - wxpush → [references/wxpush.md](references/wxpush.md)
 - go-wxpush → [references/go-wxpush.md](references/go-wxpush.md)
 
-## 脚本说明
+## 皮肤列表（edgeone 原生支持）
 
-- `scripts/wxpush.sh` — 发送消息，自动读取 env 配置，支持参数覆盖
-- `scripts/wxpush-init.sh` — 交互式引导创建 wxpush.env
+MacOS_Hacker_Theme-LGT、aurora-glass、cyberpunk、hacker-dark、minimalist-light、ocean-breeze、quiet-night、sakura、sunset-glow、terminal-neon、warm-magazine
+
+## 安全提示
+
+- 默认端点（`wxpush.hunluan.space`、`push.hzz.cool`）为第三方服务，AppID/Secret/Token 会发送至对应服务
+- 如不信任默认端点，请自行部署服务并设置 `WXPUSH_API_URL`
+- 配置文件权限建议设为 600（仅当前用户可读写）
