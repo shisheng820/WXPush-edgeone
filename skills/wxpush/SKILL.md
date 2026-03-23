@@ -3,6 +3,7 @@ name: wxpush
 description: "微信模板消息推送 skill。支持三种 wxpush API 格式：edgeone（默认）、wxpush（frankiejun 项目）、go-wxpush。使用场景：发送微信推送消息、配置 wxpush 环境。"
 homepage: https://github.com/shisheng820/WXPush-edgeone
 metadata: { "openclaw": { "emoji": "💬", "requires": { "bins": ["curl", "python3"] } } }
+license: MIT-0
 ---
 
 # WXPush Skill
